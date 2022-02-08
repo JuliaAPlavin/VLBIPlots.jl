@@ -1,7 +1,7 @@
 name = "VLBIPlots"
 uuid = "0260e397-8112-41bf-b55a-6b4577718f00"
 authors = ["Alexander Plavin <alexander@plav.in>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Colors = "5ae59095-9a9b-59fe-a467-6f913c188581"
