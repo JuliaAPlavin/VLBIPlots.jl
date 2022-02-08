@@ -6,7 +6,7 @@ using Test
 
 comp = beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15))
 
-BeamArtist(comp)
+plt.gca().add_artist(BeamArtist(comp))
 
 radplot(abs, comp, 0..1e9)
 radplot(angle, comp, 0..1e9)
