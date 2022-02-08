@@ -11,6 +11,9 @@ BeamArtist(comp)
 radplot(abs, comp, 0..1e9)
 radplot(angle, comp, 0..1e9)
 
+plot_imageplane(comp)
+plot_imageplane(MultiComponentModel((comp,)))
+
 
 import CompatHelperLocal as CHL
 CHL.@check()
