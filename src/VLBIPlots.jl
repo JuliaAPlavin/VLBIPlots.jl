@@ -1,6 +1,6 @@
 module VLBIPlots
 
-export plot_imageplane, radplot
+export plot_imageplane, radplot, BeamArtist
 
 using InterferometricModels
 using Colors
@@ -9,6 +9,8 @@ using Unitful
 using IntervalSets
 using DataPipes
 using LinearAlgebra
+
+include("artists.jl")
 
 
 function plot_imageplane(m::MultiComponentModel; kwargs...)
