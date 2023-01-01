@@ -11,3 +11,12 @@ IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 PyPlotUtils = "5384e752-6c47-47b3-86ac-9d091b110b31"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
+[compat]
+Colors = "0.12.8"
+DataPipes = "0.2.7"
+InterferometricModels = "0.1.1"
+IntervalSets = "0.5.3"
+PyPlotUtils = "0.1.6"
+Unitful = "1.10.1"
+julia = "1.7"
