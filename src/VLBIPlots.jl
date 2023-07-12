@@ -9,6 +9,8 @@ using Unitful
 using IntervalSets
 using DataPipes
 using LinearAlgebra
+using Accessors
+using FlexiMaps: mapview
 
 include("artists.jl")
 include("radplot.jl")
