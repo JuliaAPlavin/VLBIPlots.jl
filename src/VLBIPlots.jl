@@ -1,6 +1,6 @@
 module VLBIPlots
 
-export plot_imageplane, radplot, BeamArtist
+export plot_imageplane, radplot, uvplot, BeamArtist
 
 using InterferometricModels
 using Colors
@@ -14,6 +14,7 @@ using FlexiMaps: mapview
 
 include("artists.jl")
 include("radplot.jl")
+include("uvplot.jl")
 
 
 function plot_imageplane(m::MultiComponentModel; colors=fill(:k, length(components(m))), kwargs...)
