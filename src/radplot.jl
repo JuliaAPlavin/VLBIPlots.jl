@@ -34,7 +34,10 @@ end
 function radplot(func::Function, c::ModelComponent, uvrng::AbstractInterval{<:Real}; n=100, alpha=0.2, color=nothing, kwargs...)
     uvdists = range(extrema(uvrng)...; length=n)
     vises = proper_ustrip.(func, visibility_envelope.(func, c, uvdists))
-    color = @something(color, plt.gca()._get_lines.prop_cycler.__next__()["color"] |> mpl_color)
+
+    l, = plt.plot([], [])
+    color = @something(color, l.get_color() |> mpl_color)
+
     plt.fill_between(uvdists, minimum.(vises), maximum.(vises); ec=color, fc=coloralpha(color, alpha), kwargs...)
     plt.xlabel("UV distance (λ)")
     plt.ylabel(proper_label(func))
