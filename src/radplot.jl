@@ -5,8 +5,9 @@ proper_label(::typeof(abs)) = "Amplitude (Jy)"
 proper_label(::typeof(angle)) = "Phase (°)"
 
 function radplot(func::Function, mod, c::AbstractVector{<:NamedTuple}; color=:red, kwargs...)
-    uvdists = @p c |> map(norm(_.uv))
-    vises = @p c |> map(proper_ustrip(func, func(visibility(mod, _.uv))))
+    uvs = @p c |> mapview(@optic _.uv)
+    uvdists = norm.(uvs)
+    vises = proper_ustrip.(func, visibility.(func, mod, uvs))
     plt.xlim(auto=true)
     plt.ylim(auto=true)
     plt.scatter(uvdists, vises; s=0.1, color, kwargs...)
