@@ -3,7 +3,8 @@ function BeamArtist(beam; ax=plt.gca(), facecolor=:lightgreen, edgecolor=:k, lin
 	box.add_artist(
 		matplotlib.patches.Ellipse(
 			(0, 0),
-			ustrip(fwhm_min(beam)), ustrip(fwhm_max(beam)), -rad2deg(position_angle(beam));
+			ustrip(fwhm_min(beam)), ustrip(fwhm_max(beam));
+			angle=-rad2deg(position_angle(beam)),
 			facecolor, edgecolor, linewidth
 		)
 	)
