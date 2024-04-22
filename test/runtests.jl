@@ -1,24 +1,34 @@
 using VLBIPlots
+using Makie
 using InterferometricModels
 using IntervalSets
 using StaticArrays
 using Test
 
 
-comp = beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15))
+@testset "rad, proj plots" begin
+    uvtbl = [(uv=SVector(0, 0), visibility=1-2im), (uv=SVector(1e3, 0), visibility=1+2im)]
+    comp = beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15))
 
-VLBIPlots.plt.gca().add_artist(BeamArtist(comp))
+    scatter(RadPlot(uvtbl))
+    scatter(RadPlot(uvtbl; yfunc=rad2deg∘angle))
+    scatter(ProjPlot(uvtbl, 0))
+    scatter(ProjPlot(uvtbl, 0; yfunc=rad2deg∘angle))
 
-radplot(abs, comp, 0..1e9)
-radplot(angle, comp, 0..1e9)
+    scatter(RadPlot(uvtbl; model=comp))
+    scatter(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle))
+    scatter(ProjPlot(uvtbl, 0; model=comp))
+    scatter(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle))
 
-radplot([abs, angle], [(uv=SVector(0, 0), visibility=1-2im), (uv=SVector(1e3, 0), visibility=1+2im)], ax=[VLBIPlots.plt.gca(), VLBIPlots.plt.gca()])
-radplot([abs, angle], comp, [(uv=SVector(0, 0),), (uv=SVector(1e3, 0),)], ax=[VLBIPlots.plt.gca(), VLBIPlots.plt.gca()])
+    band(RadPlot(0..10; model=comp))
+    band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
+end
 
-uvplot([(uv=SVector(0, 0), visibility=1-2im), (uv=SVector(1e3, 0), visibility=1+2im)])
 
-plot_imageplane(comp)
-plot_imageplane(MultiComponentModel((comp,)))
+# VLBIPlots.plt.gca().add_artist(BeamArtist(comp))
+
+# plot_imageplane(comp)
+# plot_imageplane(MultiComponentModel((comp,)))
 
 
 import CompatHelperLocal as CHL
