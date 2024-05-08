@@ -1,5 +1,7 @@
 MakieExtra.@define_plotfunc_conv (image,) Union{ModelComponent, MultiComponentModel}
 
+MakieExtra.default_axis_attributes(::Type{<:Image}, x::Union{ModelComponent,MultiComponentModel}; kwargs...) = (;)
+
 Makie.used_attributes(::Type{<:Image}, x::Union{ModelComponent, MultiComponentModel}) =
     (:npix, :xyintervals, :xyranges, :xygrid)
 
