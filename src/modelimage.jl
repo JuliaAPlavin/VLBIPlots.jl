@@ -28,8 +28,8 @@ function _default_xyintervals(model::MultiComponentModel)
     avgs .± wmax/2
 end
 
-_rngs_from_intervals(int::AbstractInterval, npix) = (range(int, npix), reverse(range(int, npix)))
-_rngs_from_intervals(ints::NTuple{2,AbstractInterval}, npix::Int) = (range(ints[1], npix), range(ints[2], npix))
+_rngs_from_intervals(int::AbstractInterval, npix) = (reverse(range(int, npix)), range(int, npix))
+_rngs_from_intervals(ints::NTuple{2,AbstractInterval}, npix::Int) = (reverse(range(ints[1], npix)), range(ints[2], npix))
 
 _xyranges(x::AbstractArray) = (x, x)
 _xyranges(x::Tuple) = x
