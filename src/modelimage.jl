@@ -16,7 +16,7 @@ MakieExtra._convert_arguments_singlestep(
 function _default_xyintervals(model::ModelComponent)
     c = coords(model)
     w = fwhm_max(model)
-    Tuple(c .± 2w)
+    Tuple(c .± 3w)
 end
 
 function _default_xyintervals(model::MultiComponentModel)
