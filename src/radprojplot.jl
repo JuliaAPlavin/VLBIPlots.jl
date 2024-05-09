@@ -2,6 +2,7 @@
     uvdata::D
     model::M = nothing
     yfunc::F = abs
+    nsteps::Int = 300
 end
 
 RadPlot(uvdata; kwargs...) = RadPlot(; uvdata, kwargs...)
@@ -12,20 +13,26 @@ Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,<:Any}) =
     convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), visibility(rp.yfunc, rp.model, _.uv))))
 
 function Makie.convert_arguments(ct::Type{<:Band}, rp::RadPlot{<:AbstractInterval,<:Any})
-    uvdists = range(rp.uvdata, length=300)
+    uvdists = range(rp.uvdata, length=rp.nsteps)
     vises = visibility_envelope.(rp.yfunc, rp.model, uvdists)
     convert_arguments(ct, uvdists, minimum.(vises), maximum.(vises))
 end
 
+function Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractInterval,<:Any})
+    uvdists = range(rp.uvdata, length=rp.nsteps)
+    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists)
+    convert_arguments(ct, [uvdists; NaN; uvdists], [minimum.(vises); NaN; maximum.(vises)])
+end
 
 @kwdef struct ProjPlot{D,M,F,PA}
     uvdata::D
     model::M = nothing
     yfunc::F = abs
     posangle::PA
+    nsteps::Int = 300
 end
 
-ProjPlot(uvdata::AbstractVector, posangle; kwargs...) = ProjPlot(; uvdata, posangle, kwargs...)
+ProjPlot(uvdata, posangle; kwargs...) = ProjPlot(; uvdata, posangle, kwargs...)
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Nothing})
     uvec = sincos(pp.posangle)
@@ -35,6 +42,13 @@ end
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Any})
     uvec = sincos(pp.posangle)
     convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), visibility(pp.yfunc, pp.model, _.uv))))
+end
+
+function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractInterval,<:Any})
+    uvdists = range(pp.uvdata, length=pp.nsteps)
+    uvec = SVector(sincos(pp.posangle))
+    vises = @p uvdists map(visibility(pp.yfunc, pp.model, _*uvec))
+    convert_arguments(ct, uvdists, vises)
 end
 
 
