@@ -4,6 +4,7 @@ using InterferometricModels
 using Unitful
 using IntervalSets
 using LinearAlgebra
+using InverseFunctions
 using Accessors
 using MakieExtra
 using MakieExtra: Makie, Makie.GeometryBasics

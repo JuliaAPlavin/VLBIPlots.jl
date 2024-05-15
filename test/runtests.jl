@@ -26,6 +26,11 @@ using TestItemRunner
     band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
 
     scatter(UVPlot(uvtbl))
+    scatter!(UVPlot(uvtbl))
+
+    scatter(UVPlot(uvtbl, uvscale=log10))
+    scatter!(UVPlot(uvtbl))  # XXX: wrong results
+    scatter!(UVPlot(uvtbl, uvscale=log10))
 end
 
 @testitem "model poly, image, beam" begin
