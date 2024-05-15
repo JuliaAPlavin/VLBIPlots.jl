@@ -24,6 +24,8 @@ using TestItemRunner
 
     band(RadPlot(0..10; model=comp))
     band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
+    scatter(ProjPlot(0..10, 0; model=comp))
+    scatter(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle))
 
     scatter(UVPlot(uvtbl))
     scatter!(UVPlot(uvtbl))

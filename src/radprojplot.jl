@@ -52,8 +52,8 @@ function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractInterval
 end
 
 
-MakieExtra.@define_plotfunc (scatter, band) RadPlot
-MakieExtra.@define_plotfunc (scatter, band) ProjPlot
+MakieExtra.@define_plotfunc (scatter, lines, scatterlines, band) RadPlot
+MakieExtra.@define_plotfunc (scatter, lines, scatterlines, band) ProjPlot
 
 MakieExtra.default_axis_attributes(::Any, x::RadPlot; kwargs...) = (
     xlabel="UV distance (λ)",
@@ -70,7 +70,8 @@ MakieExtra.default_axis_attributes(::Any, x::ProjPlot; kwargs...) = (
 _default_xlims(rp::RadPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (0, __)
 _default_xlims(rp::RadPlot{<:AbstractInterval}) = extrema(rp.uvdata)
 
-_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (-__, __)
+_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (0, __)
+_default_xlims(rp::ProjPlot{<:AbstractInterval}) = extrema(rp.uvdata)
 
 _default_ylims(x::Union{RadPlot,ProjPlot}) = get(Dict(
     abs => (0, nothing),
