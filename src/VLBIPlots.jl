@@ -23,7 +23,4 @@ include("beamplot.jl")
 include("modelimage.jl")
 include("modelpoly.jl")
 
-# proper_ustrip(::typeof(abs), x) = ustrip(x)
-# proper_ustrip(::typeof(angle), x) = ustrip(u"°", x)
-
 end
