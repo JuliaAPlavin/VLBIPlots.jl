@@ -8,9 +8,9 @@ end
 RadPlot(uvdata; kwargs...) = RadPlot(; uvdata, kwargs...)
 
 Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,Nothing}) =
-    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), rp.yfunc(_.visibility))))
+    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_uv(_)), rp.yfunc(_visibility(_)))))
 Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,<:Any}) =
-    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), visibility(rp.yfunc, rp.model, _.uv) |> ustrip)))
+    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_uv(_)), visibility(rp.yfunc, rp.model, _uv(_)) |> ustrip)))
 
 function Makie.convert_arguments(ct::Type{<:Band}, rp::RadPlot{<:AbstractInterval,<:Any})
     uvdists = range(rp.uvdata, length=rp.nsteps)
@@ -36,12 +36,12 @@ ProjPlot(uvdata, posangle; kwargs...) = ProjPlot(; uvdata, posangle, kwargs...)
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Nothing})
     uvec = sincos(pp.posangle)
-    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), pp.yfunc(_.visibility))))
+    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_uv(_), uvec), pp.yfunc(_visibility(_)))))
 end
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Any})
     uvec = sincos(pp.posangle)
-    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), visibility(pp.yfunc, pp.model, _.uv) |> ustrip)))
+    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_uv(_), uvec), visibility(pp.yfunc, pp.model, _uv(_)) |> ustrip)))
 end
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractInterval,<:Any})
@@ -67,10 +67,10 @@ MakieExtra.default_axis_attributes(::Any, x::ProjPlot; kwargs...) = (
     limits=(_default_xlims(x), _default_ylims(x)),
 )
 
-_default_xlims(rp::RadPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (0, __)
+_default_xlims(rp::RadPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_uv(_))) 1.05*__ (0, __)
 _default_xlims(rp::RadPlot{<:AbstractInterval}) = extrema(rp.uvdata)
 
-_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (0, __)
+_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_uv(_))) 1.05*__ (0, __)
 _default_xlims(rp::ProjPlot{<:AbstractInterval}) = extrema(rp.uvdata)
 
 _default_ylims(x::Union{RadPlot,ProjPlot}) = get(Dict(
