@@ -5,10 +5,7 @@
 end
 
 function Makie.plot!(p::Beampoly)
-    attrs = @p let
-        Makie.shared_attributes(p, Poly)
-    end
-    poly!(p, attrs,
+    poly!(p, Makie.shared_attributes(p, Poly),
         @lift let
             center_data = Makie.fractionpoint(
                 convert(Rect2f, $(Makie.projview_to_2d_limits(p))),
