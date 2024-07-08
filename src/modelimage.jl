@@ -1,13 +1,32 @@
-Makie.used_attributes(::Type{<:Image}, x::Union{ModelComponent, MultiComponentModel}) =
-    (:npix, :xyintervals, :xyranges, :xygrid)
+Makie.used_attributes(::Type{<:Image}, m::Union{ModelComponent, MultiComponentModel}) = (:npix,)
+Makie.used_attributes(::Type{<:Image}, x::ClosedInterval, y::ClosedInterval, m::Union{ModelComponent, MultiComponentModel}) = (:npix,)
 
 Makie.convert_arguments(
-	ct::ImageLike, model::Union{ModelComponent, MultiComponentModel};
+	ct::ImageLike,
+    model::Union{ModelComponent, MultiComponentModel};
 	npix=256,
-	xyintervals=_default_xyintervals(model),
-	xyranges=_rngs_from_intervals(xyintervals, npix),
-	pixgrid=grid(SVector, _xyranges(xyranges)...)
-) = Makie.convert_arguments(ct, intensity(model).(pixgrid))
+) = Makie.convert_arguments(ct, _default_xyintervals(model)..., model; npix)
+
+Makie.convert_arguments(
+	ct::ImageLike,
+    x::ClosedInterval,
+    y::ClosedInterval,
+    model::Union{ModelComponent, MultiComponentModel};
+	npix=256,
+) = Makie.convert_arguments(ct, range(x, length=npix), range(y, length=npix), model)
+
+Makie.convert_arguments(
+	ct::ImageLike,
+    x::AbstractVector,
+    y::AbstractVector,
+    model::Union{ModelComponent, MultiComponentModel}
+) = Makie.convert_arguments(ct, grid(SVector, x, y), model)
+
+Makie.convert_arguments(
+	ct::ImageLike,
+    xy::AbstractMatrix,
+    model::Union{ModelComponent, MultiComponentModel}
+) = Makie.convert_arguments(ct, intensity(model).(xy))
 
 function _default_xyintervals(model::ModelComponent)
     c = coords(model)
