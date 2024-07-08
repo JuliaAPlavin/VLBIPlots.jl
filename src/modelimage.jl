@@ -1,17 +1,13 @@
-MakieExtra.@define_plotfunc_conv (image,) Union{ModelComponent, MultiComponentModel}
-
-MakieExtra.default_axis_attributes(::Type{<:Image}, x::Union{ModelComponent,MultiComponentModel}; kwargs...) = (;)
-
 Makie.used_attributes(::Type{<:Image}, x::Union{ModelComponent, MultiComponentModel}) =
     (:npix, :xyintervals, :xyranges, :xygrid)
 
-MakieExtra._convert_arguments_singlestep(
-	ct::Type{<:Image}, model::Union{ModelComponent, MultiComponentModel};
+Makie.convert_arguments(
+	ct::ImageLike, model::Union{ModelComponent, MultiComponentModel};
 	npix=256,
 	xyintervals=_default_xyintervals(model),
 	xyranges=_rngs_from_intervals(xyintervals, npix),
 	pixgrid=grid(SVector, _xyranges(xyranges)...)
-) = (intensity(model).(pixgrid),)
+) = Makie.convert_arguments(ct, intensity(model).(pixgrid))
 
 function _default_xyintervals(model::ModelComponent)
     c = coords(model)
