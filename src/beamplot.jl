@@ -4,7 +4,9 @@
     )
 end
 
-function Makie.plot!(p::Beampoly)
+Makie.convert_arguments(ct::Type{<:Beampoly}, beam::Beam) = convert_arguments(ct, ModelComponent(beam))
+
+function Makie.plot!(p::Beampoly{<:Tuple{ModelComponent}})
     poly!(p, Makie.shared_attributes(p, Poly),
         @lift let
             center_data = Makie.fractionpoint(
