@@ -1,80 +1,72 @@
-@kwdef struct RadPlot{D,M,F}
-    uvdata::D
-    model::M = nothing
-    yfunc::F = abs
-    nsteps::Int = 300
+function RadPlot(tbl::AbstractVector; yfunc=abs, uvscale=identity, model=nothing)
+	fplt = FPlot(tbl,
+		norm ∘ _uv,
+		axis=(;
+			xlabel="UV distance (λ)",
+			ylabel=_ylabel_by_func(yfunc),
+			limits=(
+				(@p tbl maximum(norm(_uv(_))) 1.05*__ (0, __)),
+				_ylims_by_func(yfunc),
+			),
+			to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...
+		)
+	)
+	@insert fplt[2] = isnothing(model) ? yfunc ∘ _visibility :
+					  (@o visibility(yfunc, model, _uv(_)) |> ustrip)
 end
 
-RadPlot(uvdata; kwargs...) = RadPlot(; uvdata, kwargs...)
+RadPlot(uvs::AbstractInterval; yfunc=abs, uvscale=identity, model=nothing) =
+	FPlot((),
+		Ref(uvs),
+		Ref(@o visibility_envelope(yfunc, model, _) |> ustrip),
+		axis=(;
+			xlabel="UV distance (λ)",
+			ylabel=_ylabel_by_func(yfunc),
+			limits=(
+				extrema(uvs),
+				_ylims_by_func(yfunc),
+			),
+			to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...
+		)
+	)
 
-Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,Nothing}) =
-    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_uv(_)), rp.yfunc(_visibility(_)))))
-Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,<:Any}) =
-    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_uv(_)), visibility(rp.yfunc, rp.model, _uv(_)) |> ustrip)))
-
-function Makie.convert_arguments(ct::Type{<:Band}, rp::RadPlot{<:AbstractInterval,<:Any})
-    uvdists = range(rp.uvdata, length=rp.nsteps)
-    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists) .|> ustrip
-    convert_arguments(ct, uvdists, minimum.(vises), maximum.(vises))
+function ProjPlot(tbl::AbstractVector, posangle; yfunc=abs, uvscale=identity, model=nothing)
+	fplt = FPlot(tbl,
+		(@o dot(_uv(_), sincos(posangle))),
+		axis=(;
+			xlabel="UV projection (λ)",
+			ylabel=_ylabel_by_func(yfunc),
+			limits=(
+				(@p tbl maximum(norm(_uv(_))) 1.05*__ (0, __)),
+				_ylims_by_func(yfunc),
+			),
+			to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...
+		)
+	)
+	@insert fplt[2] = isnothing(model) ? yfunc ∘ _visibility :
+					  (@o visibility(yfunc, model, _uv(_)) |> ustrip)
 end
 
-function Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractInterval,<:Any})
-    uvdists = range(rp.uvdata, length=rp.nsteps)
-    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists) .|> ustrip
-    convert_arguments(ct, [uvdists; NaN; uvdists], [minimum.(vises); NaN; maximum.(vises)])
-end
+ProjPlot(uvs::AbstractInterval, posangle; yfunc=abs, uvscale=identity, model=nothing) =
+	FPlot((),
+		Ref(uvs),
+		Ref(@o visibility(yfunc, model, _ * SVector(sincos(posangle))) |> ustrip),
+		axis=(;
+			xlabel="UV projection (λ)",
+			ylabel=_ylabel_by_func(yfunc),
+			limits=(
+				extrema(uvs),
+				_ylims_by_func(yfunc),
+			),
+			to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...
+		)
+	)
 
-@kwdef struct ProjPlot{D,M,F,PA}
-    uvdata::D
-    model::M = nothing
-    yfunc::F = abs
-    posangle::PA
-    nsteps::Int = 300
-end
+_ylabel_by_func(::typeof(abs)) = "Amplitude"
+_ylabel_by_func(::typeof(angle)) = "Phase (rad)"
+_ylabel_by_func(::typeof(rad2deg∘angle)) = "Phase (°)"
 
-ProjPlot(uvdata, posangle; kwargs...) = ProjPlot(; uvdata, posangle, kwargs...)
-
-function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Nothing})
-    uvec = sincos(pp.posangle)
-    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_uv(_), uvec), pp.yfunc(_visibility(_)))))
-end
-
-function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Any})
-    uvec = sincos(pp.posangle)
-    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_uv(_), uvec), visibility(pp.yfunc, pp.model, _uv(_)) |> ustrip)))
-end
-
-function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractInterval,<:Any})
-    uvdists = range(pp.uvdata, length=pp.nsteps)
-    uvec = SVector(sincos(pp.posangle))
-    vises = @p uvdists map(visibility(pp.yfunc, pp.model, _*uvec) |> ustrip)
-    convert_arguments(ct, uvdists, vises)
-end
-
-
-MakieExtra.@define_plotfunc (scatter, lines, scatterlines, band) RadPlot
-MakieExtra.@define_plotfunc (scatter, lines, scatterlines, band) ProjPlot
-
-MakieExtra.default_axis_attributes(::Any, x::RadPlot; kwargs...) = (
-    xlabel="UV distance (λ)",
-    ylabel=Dict(abs => "Amplitude", angle => "Phase (rad)", rad2deg∘angle => "Phase (°)")[x.yfunc],
-    limits=(_default_xlims(x), _default_ylims(x)),
-)
-
-MakieExtra.default_axis_attributes(::Any, x::ProjPlot; kwargs...) = (
-    xlabel="UV projection (λ)",
-    ylabel=Dict(abs => "Amplitude", angle => "Phase (rad)", rad2deg∘angle => "Phase (°)")[x.yfunc],
-    limits=(_default_xlims(x), _default_ylims(x)),
-)
-
-_default_xlims(rp::RadPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_uv(_))) 1.05*__ (0, __)
-_default_xlims(rp::RadPlot{<:AbstractInterval}) = extrema(rp.uvdata)
-
-_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_uv(_))) 1.05*__ (0, __)
-_default_xlims(rp::ProjPlot{<:AbstractInterval}) = extrema(rp.uvdata)
-
-_default_ylims(x::Union{RadPlot,ProjPlot}) = get(Dict(
-    abs => (0, nothing),
-    # angle => (-π, π),
-    # rad2deg∘angle => (-180, 180)
-), x.yfunc, nothing)
+_ylims_by_func(_) = nothing
+_ylims_by_func(::typeof(abs)) = (0, nothing)
+# _ylims_by_func(::typeof(angle)) = (-π, π)
+# _ylims_by_func(::typeof(rad2deg∘angle)) = (-180, 180)
