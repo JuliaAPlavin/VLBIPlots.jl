@@ -1,21 +1,24 @@
-RadPlot(tbl::AbstractVector; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
-	FPlot(tbl,
-		norm ∘ _uv,
-		isnothing(model) ?
-			yfunc ∘ _visibility :
-			(@o visibility(yfunc, model, _uv(_)) |> ustrip);
-		axis=(;
-			xlabel="UV distance (λ)",
-			ylabel=_ylabel_by_func(yfunc),
-			limits=(
-				(@p tbl maximum(norm(_uv(_))) 1.05*__ (0, __)),
-				_ylims_by_func(yfunc),
-			),
-			to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
-			get(kwargs, :axis, (;))...,
+RadPlot(fplt::FPlot; yfunc=abs, uvscale=identity, model=nothing, kwargs...) = @p let
+	fplt
+	@insert __[1] = norm ∘ _uv
+	@insert __[2] = isnothing(model) ?
+						yfunc ∘ _visibility :
+						(@o visibility(yfunc, model, _uv(_)) |> ustrip)
+	@set __.axis = (;
+		xlabel="UV distance (λ)",
+		ylabel=_ylabel_by_func(yfunc),
+		limits=(
+			(@p fplt.data maximum(norm(_uv(_))) 1.05*__ (0, __)),
+			_ylims_by_func(yfunc),
 		),
-		delete(NamedTuple(kwargs), (@maybe _.axis))...,
+		to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
+		fplt.axis...,
+		get(kwargs, :axis, (;))...,
 	)
+	setproperties(__, delete(NamedTuple(kwargs), (@maybe _.axis)))
+end
+
+RadPlot(tbl::AbstractVector; yfunc=abs, uvscale=identity, model=nothing, kwargs...) = RadPlot(FPlot(tbl); yfunc, uvscale, model, kwargs...)
 
 RadPlot(uvs::AbstractInterval; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
 	FPlot((),
@@ -34,24 +37,28 @@ RadPlot(uvs::AbstractInterval; yfunc=abs, uvscale=identity, model=nothing, kwarg
 		delete(NamedTuple(kwargs), (@maybe _.axis))...,
 	)
 
-ProjPlot(tbl::AbstractVector, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
-	FPlot(tbl,
-		(@o dot(_uv(_), sincos(posangle))),
-		isnothing(model) ?
-			yfunc ∘ _visibility :
-			(@o visibility(yfunc, model, _uv(_)) |> ustrip);
-		axis=(;
-			xlabel="UV projection (λ)",
-			ylabel=_ylabel_by_func(yfunc),
-			limits=(
-				(@p tbl maximum(norm(_uv(_))) 1.05*__ (0, __)),
-				_ylims_by_func(yfunc),
-			),
-			to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
-			get(kwargs, :axis, (;))...,
+
+ProjPlot(fplt::FPlot, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) = @p let
+	fplt
+	@insert __[1] = @o dot(_uv(_), sincos(posangle))
+	@insert __[2] = isnothing(model) ?
+						yfunc ∘ _visibility :
+						(@o visibility(yfunc, model, _uv(_)) |> ustrip)
+	@set __.axis = (;
+		xlabel="UV projection (λ)",
+		ylabel=_ylabel_by_func(yfunc),
+		limits=(
+			(@p fplt.data maximum(norm(_uv(_))) 1.05*__ (0, __)),
+			_ylims_by_func(yfunc),
 		),
-		delete(NamedTuple(kwargs), (@maybe _.axis))...,
+		to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
+		fplt.axis...,
+		get(kwargs, :axis, (;))...,
 	)
+	setproperties(__, delete(NamedTuple(kwargs), (@maybe _.axis)))
+end
+
+ProjPlot(tbl::AbstractVector, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) = ProjPlot(FPlot(tbl), posangle; yfunc, uvscale, model, kwargs...)
 
 ProjPlot(uvs::AbstractInterval, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
 	FPlot((),
