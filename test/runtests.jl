@@ -7,7 +7,7 @@ using TestItemRunner
     using InterferometricModels
     using StaticArrays
     using IntervalSets
-    using Makie
+    using MakieExtra
     using Unitful
 
     uvtbl = [(spec=SVector(0., 0), visibility=1-2im), (spec=SVector(1e3, 1e2), visibility=1+2im)]
@@ -16,37 +16,37 @@ using TestItemRunner
         CircularGaussian(flux=1.0u"W", σ=1.0u"°", coords=SVector(0., 0)u"°"),
     ]
 
-    scatter(RadPlot(uvtbl), doaxis=true)
+    axplot(scatter)(RadPlot(uvtbl))
     @test current_axis().xlabel[] == "UV distance (λ)"
-    scatter(RadPlot(uvtbl; yfunc=rad2deg∘angle), doaxis=true)
+    axplot(scatter)(RadPlot(uvtbl; yfunc=rad2deg∘angle))
     @test current_axis().xlabel[] == "UV distance (λ)"
-    scatter(ProjPlot(uvtbl, 0), doaxis=true)
+    axplot(scatter)(ProjPlot(uvtbl, 0))
     @test current_axis().xlabel[] == "UV projection (λ)"
-    scatter(ProjPlot(uvtbl, 0; yfunc=rad2deg∘angle), doaxis=true)
+    axplot(scatter)(ProjPlot(uvtbl, 0; yfunc=rad2deg∘angle))
     @test current_axis().xlabel[] == "UV projection (λ)"
 
-    scatter(UVPlot(uvtbl), doaxis=true)
+    axplot(scatter)(UVPlot(uvtbl))
     @test current_axis().xlabel[] == "U (λ)"
     scatter!(UVPlot(uvtbl))
 
-    scatter(UVPlot(uvtbl, uvscale=VLBIPlots.SymLog(2)), doaxis=true)
+    axplot(scatter)(UVPlot(uvtbl, uvscale=VLBIPlots.SymLog(2)))
     scatter!(UVPlot(uvtbl))  # XXX: wrong results
     scatter!(UVPlot(uvtbl, uvscale=log10))
 
     @testset for comp in comps
-        scatter(RadPlot(uvtbl; model=comp), doaxis=true)
+        axplot(scatter)(RadPlot(uvtbl; model=comp))
         @test current_axis().xlabel[] == "UV distance (λ)"
-        scatter(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle), doaxis=true)
-        scatter(ProjPlot(uvtbl, 0; model=comp), doaxis=true)
+        axplot(scatter)(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle))
+        axplot(scatter)(ProjPlot(uvtbl, 0; model=comp))
         @test current_axis().xlabel[] == "UV projection (λ)"
-        scatter(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle), doaxis=true)
+        axplot(scatter)(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle))
 
-        band(RadPlot(0..10; model=comp), doaxis=true)
+        axplot(band)(RadPlot(0..10; model=comp))
         @test current_axis().xlabel[] == "UV distance (λ)"
-        band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle), doaxis=true)
-        scatter(ProjPlot(0..10, 0; model=comp), doaxis=true)
+        axplot(band)(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle))
+        axplot(scatter)(ProjPlot(0..10, 0; model=comp))
         @test current_axis().xlabel[] == "UV projection (λ)"
-        scatter(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle), doaxis=true)
+        axplot(scatter)(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle))
     end
 end
 
