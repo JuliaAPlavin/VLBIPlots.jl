@@ -1,14 +1,14 @@
 RadPlot(fplt::FPlot; yfunc=abs, uvscale=identity, model=nothing, kwargs...) = @p let
 	fplt
-	@insert __[1] = norm ∘ _uv
+	@insert __[1] = norm ∘ VLBI.UV
 	@insert __[2] = isnothing(model) ?
 						yfunc ∘ _visibility :
-						(@o visibility(yfunc, model, _uv(_)) |> ustrip)
+						(@o visibility(yfunc, model, VLBI.UV(_)) |> ustrip)
 	@set __.axis = (;
 		xlabel="UV distance (λ)",
 		ylabel=_ylabel_by_func(yfunc),
 		limits=(
-			(@p fplt.data maximum(norm(_uv(_))) 1.05*__ (0, __)),
+			(@p fplt.data maximum(norm(VLBI.UV(_))) (-0.02*__, 1.05*__)),
 			_ylims_by_func(yfunc),
 		),
 		to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
@@ -40,15 +40,15 @@ RadPlot(uvs::AbstractInterval; yfunc=abs, uvscale=identity, model=nothing, kwarg
 
 ProjPlot(fplt::FPlot, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) = @p let
 	fplt
-	@insert __[1] = @o dot(_uv(_), sincos(posangle))
+	@insert __[1] = @o dot(VLBI.UV(_), sincos(posangle))
 	@insert __[2] = isnothing(model) ?
 						yfunc ∘ _visibility :
-						(@o visibility(yfunc, model, _uv(_)) |> ustrip)
+						(@o visibility(yfunc, model, VLBI.UV(_)) |> ustrip)
 	@set __.axis = (;
 		xlabel="UV projection (λ)",
 		ylabel=_ylabel_by_func(yfunc),
 		limits=(
-			(@p fplt.data maximum(norm(_uv(_))) 1.05*__ (0, __)),
+			(@p fplt.data maximum(norm(VLBI.UV(_))) (-0.02*__, 1.05*__)),
 			_ylims_by_func(yfunc),
 		),
 		to_x_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
