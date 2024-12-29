@@ -1,6 +1,7 @@
 [deps]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 InterferometricModels = "b395d269-c2ec-4df6-b679-36919ad600ca"
 IntervalSets = "8197267c-284f-5f27-9208-e0e47529a953"
 Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
@@ -10,6 +11,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestItemRunner = "f8b46487-2199-4994-9208-9a1283c18c0a"
 TestItems = "1c621080-faea-4a02-84b6-bbd5e436b8fe"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+VLBIData = "679fc9cc-3e84-11e9-251b-cbd013bd8115"
 
 [compat]
 Aqua = "0.8.7"

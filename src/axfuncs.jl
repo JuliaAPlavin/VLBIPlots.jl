@@ -17,14 +17,20 @@ UVproj(posangle; uvscale=identity, kwargs...) = AxFunc(
     label="UV projection (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
+_uvfunc(uvscale) = function(uv)
+    uv′ = @modify(uvscale, norm(uv))
+    return inverse(uvscale).(uv′)
+end
+    
+
 visf(f; label=_visfunclabel(f), limit=_visfunclims(f), model=nothing, kwargs...) = AxFunc(
     isnothing(model) ?
         f ∘ _visibility :
         (@o visibility(f, model, VLBI.UV(_)) |> ustrip);
     label, limit, kwargs...)
 
-vis_amp(; model=nothing, kwargs...) = vis_f(abs; model, kwargs...)
-vis_phase(postf=rad2deg; model=nothing, kwargs...) = vis_f(postf ∘ angle ∘ _visibility; model, kwargs...)
+vis_amp(; model=nothing, kwargs...) = visf(abs; model, kwargs...)
+vis_phase(postf=rad2deg; model=nothing, kwargs...) = visf(postf ∘ angle; model, kwargs...)
 
 _visfunclabel(::typeof(abs)) = "Amplitude"
 _visfunclabel(::typeof(angle)) = "Phase (rad)"
@@ -35,7 +41,7 @@ _visfunclims(::typeof(abs)) = (0, nothing)
 # _visfunclims(::typeof(angle)) = (-π, π)
 # _visfunclims(::typeof(rad2deg∘angle)) = (-180, 180)
 
-_uvfunc(uvscale) = function(uv)
-    uv′ = @modify(uvscale, norm(uv))
-    return inverse(uvscale).(uv′)
-end
+
+DateTime() = AxFunc(label="Datetime", @o _.datetime)
+Time() = AxFunc(label="Time of day", @o _.datetime |> Dates.Time)
+baseline() = AxFunc(label="Baseline", x -> @p VLBI.antennas(x) map(_.name) join(__, " – "))

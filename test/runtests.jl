@@ -50,6 +50,19 @@ using TestItemRunner
     end
 end
 
+@testitem "axfuncs" begin
+    using StaticArrays
+    using MakieExtra
+    using VLBIData
+    using Dates
+
+    uvtbl = [(spec=VLBI.VisSpec(VLBI.Baseline(1, (1, 2)), SVector(0., 0)), visibility=1-2im, datetime=now()),
+             (spec=VLBI.VisSpec(VLBI.Baseline(1, (1, 2)), SVector(1e3, 1e2)), visibility=1+2im, datetime=now())]
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.UVdist(), VLBIPlots.AxFuncs.vis_amp()))
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.vis_phase(), VLBIPlots.AxFuncs.baseline()))
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.Time(), VLBIPlots.AxFuncs.baseline()))
+end
+
 @testitem "model poly, image, beam" begin
     using InterferometricModels
     using StaticArrays

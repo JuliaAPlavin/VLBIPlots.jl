@@ -23,8 +23,8 @@ export RadPlot, ProjPlot, UVPlot, beampoly!
 _visibility(x::NamedTuple) = @oget x.visibility x.value
 
 module AxFuncs
-using ..Accessors, ..InverseFunctions, ..LinearAlgebra, ..VLBIData, ..MakieExtra
-import .._visibility
+using ..Accessors, ..InverseFunctions, ..LinearAlgebra, ..VLBIData, ..MakieExtra, Dates
+import .._visibility, ..@p
 include("axfuncs.jl")
 end
 include("radprojplot.jl")
