@@ -21,7 +21,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 [compat]
 Accessors = "0.1.32"
 AccessorsExtra = "0.1.72"
-AxisKeysExtra = "0.1.7"
+AxisKeysExtra = "0.1.11"
 DataManipulation = "0.1.16"
 InterferometricModels = "0.1.1"
 IntervalSets = "0.5.3, 0.6, 0.7"

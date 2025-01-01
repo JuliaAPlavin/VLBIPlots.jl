@@ -17,11 +17,16 @@ using TestItemRunner
     ]
 
     scatter(RadPlot(uvtbl))
+    @test current_axis().xlabel[] == "UV distance (λ)"
     scatter(RadPlot(uvtbl; yfunc=rad2deg∘angle))
+    @test current_axis().xlabel[] == "UV distance (λ)"
     scatter(ProjPlot(uvtbl, 0))
+    @test current_axis().xlabel[] == "UV projection (λ)"
     scatter(ProjPlot(uvtbl, 0; yfunc=rad2deg∘angle))
+    @test current_axis().xlabel[] == "UV projection (λ)"
 
     scatter(UVPlot(uvtbl))
+    @test current_axis().xlabel[] == "U (λ)"
     scatter!(UVPlot(uvtbl))
 
     scatter(UVPlot(uvtbl, uvscale=log10))
@@ -30,13 +35,17 @@ using TestItemRunner
 
     @testset for comp in comps
         scatter(RadPlot(uvtbl; model=comp))
+        @test current_axis().xlabel[] == "UV distance (λ)"
         scatter(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle))
         scatter(ProjPlot(uvtbl, 0; model=comp))
+        @test current_axis().xlabel[] == "UV projection (λ)"
         scatter(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle))
 
         band(RadPlot(0..10; model=comp))
+        @test current_axis().xlabel[] == "UV distance (λ)"
         band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
         scatter(ProjPlot(0..10, 0; model=comp))
+        @test current_axis().xlabel[] == "UV projection (λ)"
         scatter(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle))
     end
 end
