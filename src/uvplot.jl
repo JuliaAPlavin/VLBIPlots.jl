@@ -1,6 +1,6 @@
 UVPlot(fplt::FPlot; uvscale=identity, kwargs...) = @p let
 	fplt
-	@insert __[1] = x -> (_uvfunc(uvscale)(_uv(x)))
+	@insert __[1] = x -> (_uvfunc(uvscale)(VLBI.UV(x)))
 	@set __.axis = (;
 		xlabel="U (λ)", ylabel="V (λ)",
 		aspect=DataAspect(), autolimitaspect=1,

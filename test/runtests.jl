@@ -10,7 +10,7 @@ using TestItemRunner
     using Makie
     using Unitful
 
-    uvtbl = [(uv=SVector(0., 0), visibility=1-2im), (uv=SVector(1e3, 1e2), visibility=1+2im)]
+    uvtbl = [(spec=SVector(0., 0), visibility=1-2im), (spec=SVector(1e3, 1e2), visibility=1+2im)]
     comps = Any[
         beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15)).comp,
         CircularGaussian(flux=1.0u"W", σ=1.0u"°", coords=SVector(0., 0)u"°"),

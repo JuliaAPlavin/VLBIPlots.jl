@@ -14,6 +14,7 @@ using Statistics: mean
 using RectiGrids
 using AxisKeysExtra
 using StaticArrays: SVector
+using VLBIData
 
 
 export RadPlot, ProjPlot, UVPlot, beampoly!
@@ -25,7 +26,6 @@ include("modelimage.jl")
 include("modelpoly.jl")
 
 # for convenient overrides:
-_uv(x::NamedTuple) = @oget x.uv x.spec.uv
 _visibility(x::NamedTuple) = @oget x.visibility x.value
 
 end
