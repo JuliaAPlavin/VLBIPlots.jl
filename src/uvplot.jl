@@ -1,10 +1,9 @@
 UVPlot(fplt::FPlot; uvscale=identity, kwargs...) = @p let
 	fplt
-	@insert __[1] = x -> (_uvfunc(uvscale)(VLBI.UV(x)))
+	@insert __[1] = AxFuncs.U(;uvscale)
+	@insert __[2] = AxFuncs.V(;uvscale)
 	@set __.axis = (;
-		xlabel="U (λ)", ylabel="V (λ)",
 		aspect=DataAspect(), autolimitaspect=1,
-		to_xy_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...,
 		fplt.axis...,
 		get(kwargs, :axis, (;))...,
 	)
