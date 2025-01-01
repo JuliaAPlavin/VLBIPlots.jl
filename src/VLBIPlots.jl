@@ -23,4 +23,8 @@ include("beamplot.jl")
 include("modelimage.jl")
 include("modelpoly.jl")
 
+# for convenient overrides:
+_uv(x::NamedTuple) = x.uv
+_visibility(x::NamedTuple) = x.visibility
+
 end

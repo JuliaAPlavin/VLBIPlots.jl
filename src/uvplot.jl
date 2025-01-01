@@ -7,7 +7,7 @@ end
 UVPlot(uvtbl::AbstractVector; kwargs...) = UVPlot(; data=uvtbl, kwargs...)
 
 Makie.convert_arguments(ct::PointBased, pp::UVPlot{<:AbstractVector}) =
-    convert_arguments(ct, @p pp.data map(Point2(_uvfunc(pp.uvscale)(_.uv)...)))
+    convert_arguments(ct, @p pp.data map(Point2(_uvfunc(pp.uvscale)(_uv(_))...)))
 
 _uvfunc(uvscale) = function(uv)
     uv′ = @modify(uvscale, norm(uv))
