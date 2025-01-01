@@ -10,17 +10,17 @@ RadPlot(uvdata; kwargs...) = RadPlot(; uvdata, kwargs...)
 Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,Nothing}) =
     convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), rp.yfunc(_.visibility))))
 Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,<:Any}) =
-    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), visibility(rp.yfunc, rp.model, _.uv))))
+    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), visibility(rp.yfunc, rp.model, _.uv) |> ustrip)))
 
 function Makie.convert_arguments(ct::Type{<:Band}, rp::RadPlot{<:AbstractInterval,<:Any})
     uvdists = range(rp.uvdata, length=rp.nsteps)
-    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists)
+    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists) .|> ustrip
     convert_arguments(ct, uvdists, minimum.(vises), maximum.(vises))
 end
 
 function Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractInterval,<:Any})
     uvdists = range(rp.uvdata, length=rp.nsteps)
-    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists)
+    vises = visibility_envelope.(rp.yfunc, rp.model, uvdists) .|> ustrip
     convert_arguments(ct, [uvdists; NaN; uvdists], [minimum.(vises); NaN; maximum.(vises)])
 end
 
@@ -41,13 +41,13 @@ end
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Any})
     uvec = sincos(pp.posangle)
-    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), visibility(pp.yfunc, pp.model, _.uv))))
+    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), visibility(pp.yfunc, pp.model, _.uv) |> ustrip)))
 end
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractInterval,<:Any})
     uvdists = range(pp.uvdata, length=pp.nsteps)
     uvec = SVector(sincos(pp.posangle))
-    vises = @p uvdists map(visibility(pp.yfunc, pp.model, _*uvec))
+    vises = @p uvdists map(visibility(pp.yfunc, pp.model, _*uvec) |> ustrip)
     convert_arguments(ct, uvdists, vises)
 end
 

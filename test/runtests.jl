@@ -8,24 +8,18 @@ using TestItemRunner
     using StaticArrays
     using IntervalSets
     using Makie
+    using Unitful
 
     uvtbl = [(uv=SVector(0., 0), visibility=1-2im), (uv=SVector(1e3, 0), visibility=1+2im)]
-    comp = beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15))
+    comps = Any[
+        beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15)),
+        CircularGaussian(flux=1.0u"W", σ=1.0u"°", coords=SVector(0., 0)u"°"),
+    ]
 
     scatter(RadPlot(uvtbl))
     scatter(RadPlot(uvtbl; yfunc=rad2deg∘angle))
     scatter(ProjPlot(uvtbl, 0))
     scatter(ProjPlot(uvtbl, 0; yfunc=rad2deg∘angle))
-
-    scatter(RadPlot(uvtbl; model=comp))
-    scatter(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle))
-    scatter(ProjPlot(uvtbl, 0; model=comp))
-    scatter(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle))
-
-    band(RadPlot(0..10; model=comp))
-    band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
-    scatter(ProjPlot(0..10, 0; model=comp))
-    scatter(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle))
 
     scatter(UVPlot(uvtbl))
     scatter!(UVPlot(uvtbl))
@@ -33,6 +27,18 @@ using TestItemRunner
     scatter(UVPlot(uvtbl, uvscale=log10))
     scatter!(UVPlot(uvtbl))  # XXX: wrong results
     scatter!(UVPlot(uvtbl, uvscale=log10))
+
+    @testset for comp in comps
+        scatter(RadPlot(uvtbl; model=comp))
+        scatter(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle))
+        scatter(ProjPlot(uvtbl, 0; model=comp))
+        scatter(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle))
+
+        band(RadPlot(0..10; model=comp))
+        band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
+        scatter(ProjPlot(0..10, 0; model=comp))
+        scatter(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle))
+    end
 end
 
 @testitem "model poly, image, beam" begin
