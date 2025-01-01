@@ -1,13 +1,15 @@
-using VLBIPlots
-using Makie
-using InterferometricModels
-using IntervalSets
-using StaticArrays
-using Test
+using TestItems
+using TestItemRunner
+@run_package_tests
 
 
-@testset "rad, proj plots" begin
-    uvtbl = [(uv=SVector(0, 0), visibility=1-2im), (uv=SVector(1e3, 0), visibility=1+2im)]
+@testitem "rad, proj, uv plots" begin
+    using InterferometricModels
+    using StaticArrays
+    using IntervalSets
+    using Makie
+
+    uvtbl = [(uv=SVector(0., 0), visibility=1-2im), (uv=SVector(1e3, 0), visibility=1+2im)]
     comp = beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15))
 
     scatter(RadPlot(uvtbl))
@@ -22,14 +24,42 @@ using Test
 
     band(RadPlot(0..10; model=comp))
     band(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle)) 
+
+    scatter(UVPlot(uvtbl))
 end
 
+@testitem "model poly, image, beam" begin
+    using InterferometricModels
+    using StaticArrays
+    using Unitful
+    using VLBIPlots.MakieExtra
 
-# VLBIPlots.plt.gca().add_artist(BeamArtist(comp))
+    model = MultiComponentModel([
+        CircularGaussian(flux=7, σ=1.5u"°", coords=SVector(0.1, 0.5)u"°"),
+        EllipticGaussian(flux=7, σ_major=1u"°", ratio_minor_major=0.3, pa_major=0.5, coords=SVector(1, 3.5)u"°"),
+        # EllipticGaussian(flux=7, σ_major=1.5u"°", ratio_minor_major=0.3, pa_major=-0.5, coords=SVector(1, 3.5)u"°") |> EllipticGaussianCovmat,
+    ])
+    fig, ax, _ = image(model, colorscale=SymLog(1e-1), colormap=:turbo, npix=20)
+    poly!(ax, model, strokewidth=2, color=(:black, 0), strokecolor=:white)
+    scatter!(ax, model)
+    beampoly!(ax, beam(CircularGaussian, σ=0.3), centerax=(0.1, 0.1), color=(:red, 0.2))
 
-# plot_imageplane(comp)
-# plot_imageplane(MultiComponentModel((comp,)))
 
+    model = MultiComponentModel([
+        CircularGaussian(flux=7u"W", σ=1.5u"°", coords=SVector(0.1, 0.5)u"°"),
+        EllipticGaussian(flux=7u"W", σ_major=1u"°", ratio_minor_major=0.3, pa_major=0.5, coords=SVector(1, 3.5)u"°"),
+        # EllipticGaussian(flux=7u"W", σ_major=1.5u"°", ratio_minor_major=0.3, pa_major=-0.5, coords=SVector(1, 3.5)u"°") |> EllipticGaussianCovmat,
+    ])
+    fig, ax, _ = poly(model)
+    image!(ax, model, xyintervals=(-5u"°"..5u"°"))
+    scatter!(ax, model)
+    beampoly!(ax, beam(CircularGaussian, σ=0.3), centerax=(0.1, 0.1), color=(:red, 0.2))
+end
 
-import CompatHelperLocal as CHL
-CHL.@check()
+@testitem "_" begin
+    import Aqua
+    Aqua.test_all(VLBIPlots; ambiguities=false, undefined_exports=false, piracies=false, persistent_tasks=false)
+
+    import CompatHelperLocal as CHL
+    CHL.@check()
+end

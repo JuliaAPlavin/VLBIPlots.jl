@@ -7,14 +7,14 @@ end
 RadPlot(uvdata; kwargs...) = RadPlot(; uvdata, kwargs...)
 
 Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,Nothing}) =
-    Makie.convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), rp.yfunc(_.visibility))))
+    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), rp.yfunc(_.visibility))))
 Makie.convert_arguments(ct::PointBased, rp::RadPlot{<:AbstractVector,<:Any}) =
-    Makie.convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), visibility(rp.yfunc, rp.model, _.uv))))
+    convert_arguments(ct, @p rp.uvdata map(Point2(norm(_.uv), visibility(rp.yfunc, rp.model, _.uv))))
 
 function Makie.convert_arguments(ct::Type{<:Band}, rp::RadPlot{<:AbstractInterval,<:Any})
     uvdists = range(rp.uvdata, length=300)
     vises = visibility_envelope.(rp.yfunc, rp.model, uvdists)
-    Makie.convert_arguments(ct, uvdists, minimum.(vises), maximum.(vises))
+    convert_arguments(ct, uvdists, minimum.(vises), maximum.(vises))
 end
 
 
@@ -29,12 +29,12 @@ ProjPlot(uvdata::AbstractVector, posangle; kwargs...) = ProjPlot(; uvdata, posan
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Nothing})
     uvec = sincos(pp.posangle)
-    Makie.convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), pp.yfunc(_.visibility))))
+    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), pp.yfunc(_.visibility))))
 end
 
 function Makie.convert_arguments(ct::PointBased, pp::ProjPlot{<:AbstractVector,<:Any})
     uvec = sincos(pp.posangle)
-    Makie.convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), visibility(pp.yfunc, pp.model, _.uv))))
+    convert_arguments(ct, @p pp.uvdata map(Point2(dot(_.uv, uvec), visibility(pp.yfunc, pp.model, _.uv))))
 end
 
 
@@ -63,23 +63,3 @@ _default_ylims(x::Union{RadPlot,ProjPlot}) = get(Dict(
     # angle => (-π, π),
     # rad2deg∘angle => (-180, 180)
 ), x.yfunc, nothing)
-
-
-@kwdef struct UVPlot{TD,UR}
-    data::TD
-    uvrange::UR = nothing
-end
-
-UVPlot(uvtbl::AbstractVector) = UVPlot(; data=uvtbl)
-
-Makie.convert_arguments(ct::PointBased, pp::UVPlot{<:AbstractVector}) =
-    Makie.convert_arguments(ct, @p pp.data map(Point2(_.uv...)))
-
-MakieExtra.@define_plotfunc (scatter,) UVPlot
-
-MakieExtra.default_axis_attributes(::Any, x::UVPlot; kwargs...) = (
-    xlabel="U (λ)",
-    ylabel="V (λ)",
-    aspect=DataAspect(),
-    autolimitaspect=1,
-)
