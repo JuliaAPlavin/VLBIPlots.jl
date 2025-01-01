@@ -11,8 +11,3 @@ UVPlot(fplt::FPlot; uvscale=identity, kwargs...) = @p let
 end
 
 UVPlot(tbl; uvscale=identity, kwargs...) = UVPlot(FPlot(tbl); uvscale, kwargs...)
-
-_uvfunc(uvscale) = function(uv)
-    uv′ = @modify(uvscale, norm(uv))
-    return inverse(uvscale).(uv′)
-end
