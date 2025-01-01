@@ -24,7 +24,7 @@ Makie.convert_arguments(ct::PointBased, m::ModelComponent) = convert_arguments(c
 Makie.convert_arguments(ct::Type{<:Poly}, m::MultiComponentModel) =
     (map(components(m)) do c
         convert_arguments(ct, c) |> only
-    end |> Vector{Makie.PolyElements},)
+    end |> collect |> Vector{Makie.PolyElements},)
 
 Makie.convert_arguments(ct::PointBased, m::MultiComponentModel) =
     (flatmap(components(m)) do c
