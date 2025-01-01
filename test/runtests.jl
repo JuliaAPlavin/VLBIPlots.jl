@@ -81,7 +81,9 @@ end
     ]
     @testset for model in models
         fig, ax, _ = image(model, colorscale=SymLog(1e-1), colormap=:turbo, npix=20)
-        @test_throws MethodError image!(model, npix="abc")  # to ensure that kwargs aren't just ignored
+        image!(-1..1, -1..1, model)
+        image!(-1:0.1:1, -1:0.1:1, model)
+        @test_throws Exception image!(model, npix="abc")  # to ensure that kwargs aren't just ignored
         poly(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
         scatter(model)
         beampoly!(ax, beam(CircularGaussian, σ=0.3), color=(:red, 0.2))
