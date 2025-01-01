@@ -6,7 +6,7 @@ using IntervalSets
 using LinearAlgebra
 using InverseFunctions
 using Accessors
-using AccessorsExtra: @oget
+using AccessorsExtra: @oget, @maybe
 using MakieExtra
 using MakieExtra: Makie, Makie.GeometryBasics
 using DataManipulation: @p, flatmap, uniqueonly
