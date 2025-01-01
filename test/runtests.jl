@@ -74,7 +74,8 @@ end
         fig, ax, _ = image(model, colorscale=SymLog(1e-1), colormap=:turbo, npix=20)
         poly(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
         scatter(model)
-        beampoly!(ax, beam(CircularGaussian, σ=0.3), centerax=(0.1, 0.1), color=(:red, 0.2))
+        beampoly!(ax, beam(CircularGaussian, σ=0.3), color=(:red, 0.2))
+        beampoly!(Observable(beam(CircularGaussian, σ=0.3)), position=(0.1, 0.1), color=(:red, 0.2))
     end
 end
 
