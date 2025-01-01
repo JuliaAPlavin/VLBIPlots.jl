@@ -6,6 +6,7 @@ using IntervalSets
 using LinearAlgebra
 using InverseFunctions
 using Accessors
+using AccessorsExtra: @oget
 using MakieExtra
 using MakieExtra: Makie, Makie.GeometryBasics
 using DataManipulation: @p, flatmap, uniqueonly
@@ -24,7 +25,7 @@ include("modelimage.jl")
 include("modelpoly.jl")
 
 # for convenient overrides:
-_uv(x::NamedTuple) = x.uv
-_visibility(x::NamedTuple) = x.visibility
+_uv(x::NamedTuple) = @oget x.uv x.spec.uv
+_visibility(x::NamedTuple) = @oget x.visibility x.value
 
 end
