@@ -53,10 +53,10 @@ MakieExtra.default_axis_attributes(::Any, x::ProjPlot; kwargs...) = (
     limits=(_default_xlims(x), _default_ylims(x)),
 )
 
-_default_xlims(rp::RadPlot{<:AbstractVector}) = (0, nothing)
+_default_xlims(rp::RadPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (0, __)
 _default_xlims(rp::RadPlot{<:AbstractInterval}) = extrema(rp.uvdata)
 
-_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) (-__, __)
+_default_xlims(rp::ProjPlot{<:AbstractVector}) = @p rp.uvdata maximum(norm(_.uv)) 1.05*__ (-__, __)
 
 _default_ylims(x::Union{RadPlot,ProjPlot}) = get(Dict(
     abs => (0, nothing),
