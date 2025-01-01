@@ -1,26 +1,19 @@
-@kwdef struct UVPlot{TD,UR}
-    data::TD
-    uvrange::UR = nothing
-    uvscale = identity
-end
-
-UVPlot(uvtbl::AbstractVector; kwargs...) = UVPlot(; data=uvtbl, kwargs...)
-
-Makie.convert_arguments(ct::PointBased, pp::UVPlot{<:AbstractVector}) =
-    convert_arguments(ct, @p pp.data map(Point2(_uvfunc(pp.uvscale)(_uv(_))...)))
+UVPlot(tbl; uvscale=identity) = FPlot(tbl,
+	x -> (_uvfunc(uvscale)(_uv(x))),
+	axis=(;
+	    xlabel="U (λ)", ylabel="V (λ)",
+		aspect=DataAspect(), autolimitaspect=1,
+		to_xy_attrs((scale=uvscale, tickformat=EngTicks(:symbol)))...
+	)
+)
 
 _uvfunc(uvscale) = function(uv)
     uv′ = @modify(uvscale, norm(uv))
     return inverse(uvscale).(uv′)
 end
 
-MakieExtra.@define_plotfunc (scatter, lines, scatterlines) UVPlot
-
-MakieExtra.default_axis_attributes(::Any, pp::UVPlot; kwargs...) = (
-    xlabel="U (λ)",
-    ylabel="V (λ)",
-    aspect=DataAspect(),
-    autolimitaspect=1,
-    xscale=pp.uvscale,
-    yscale=pp.uvscale,
-)
+# XXX: piracy, https://github.com/JuliaObjects/Accessors.jl/pull/162
+function Accessors.set(arr, ::typeof(norm), val::Number)
+	omul = iszero(val) ? one(norm(arr)) : norm(arr)
+	map(Base.Fix2(*, val / omul), arr)
+end
