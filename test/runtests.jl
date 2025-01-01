@@ -77,7 +77,7 @@ end
             CircularGaussian(flux=7u"W", σ=1.5u"°", coords=SVector(0.1, 0.5)u"°"),
             EllipticGaussian(flux=7u"W", σ_major=1u"°", ratio_minor_major=0.3, pa_major=0.5, coords=SVector(1, 3.5)u"°"),
             # EllipticGaussian(flux=7u"W", σ_major=1.5u"°", ratio_minor_major=0.3, pa_major=-0.5, coords=SVector(1, 3.5)u"°") |> EllipticGaussianCovmat,
-        ])
+        ]),
     ]
     @testset for model in models
         fig, ax, _ = image(model, colorscale=SymLog(1e-1), colormap=:turbo, npix=20)
@@ -88,6 +88,18 @@ end
         scatter(model)
         beampoly!(ax, beam(CircularGaussian, σ=0.3), color=(:red, 0.2))
         beampoly!(Observable(beam(CircularGaussian, σ=0.3)), position=(0.1, 0.1), color=(:red, 0.2))
+    end
+    models = [
+        MultiComponentModel([
+            InterferometricModels.Point(flux=7u"W", coords=SVector(0.1, 0.5)u"°"),
+            CircularGaussian(flux=7u"W", σ=1.5u"°", coords=SVector(0.1, 0.5)u"°"),
+            EllipticGaussian(flux=7u"W", σ_major=1u"°", ratio_minor_major=0.3, pa_major=0.5, coords=SVector(1, 3.5)u"°"),
+            # EllipticGaussian(flux=7u"W", σ_major=1.5u"°", ratio_minor_major=0.3, pa_major=-0.5, coords=SVector(1, 3.5)u"°") |> EllipticGaussianCovmat,
+        ]),
+    ]
+    @testset for model in models
+        poly(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
+        scatter(model)
     end
 end
 
