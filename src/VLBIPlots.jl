@@ -22,6 +22,8 @@ export RadPlot, ProjPlot, UVPlot, beampoly!
 # for convenient overrides:
 _visibility(x::NamedTuple) = @oget x.visibility x.value
 
+_ustrip_i(x::Interval) = @modify(ustrip, endpoints(x)[∗])
+
 module AxFuncs
 using ..Accessors, ..InverseFunctions, ..LinearAlgebra, ..VLBIData, ..MakieExtra, Dates
 import .._visibility, ..@p

@@ -11,7 +11,7 @@ RadPlot(tbl::AbstractVector; kwargs...) = RadPlot(FPlot(tbl); kwargs...)
 RadPlot(uvs::AbstractInterval; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
 	FPlot((),
 		Ref(uvs),
-		Ref(@o visibility_envelope(yfunc, model, _) |> ustrip);
+		Ref(@o visibility_envelope(yfunc, model, _) |> _ustrip_i);
 		axis=(;
 			xlabel="UV distance (λ)",
 			ylabel=AxFuncs._visfunclabel(yfunc),
