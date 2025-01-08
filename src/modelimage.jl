@@ -13,7 +13,7 @@ Makie.convert_arguments(
     y::ClosedInterval,
     model::Union{ModelComponent, MultiComponentModel};
 	npix=256,
-) = Makie.convert_arguments(ct, range(x, length=npix), range(y, length=npix), model)
+) = Makie.convert_arguments(ct, reverse(range(x, length=npix)), range(y, length=npix), model)
 
 Makie.convert_arguments(
 	ct::ImageLike,
@@ -42,9 +42,3 @@ function _default_xyintervals(model::MultiComponentModel)
     avgs = mean.((ex1, ex2))
     avgs .± wmax/2
 end
-
-_rngs_from_intervals(int::AbstractInterval, npix) = (reverse(range(int, npix)), range(int, npix))
-_rngs_from_intervals(ints::NTuple{2,AbstractInterval}, npix::Int) = (reverse(range(ints[1], npix)), range(ints[2], npix))
-
-_xyranges(x::AbstractArray) = (x, x)
-_xyranges(x::Tuple) = x
