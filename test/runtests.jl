@@ -11,9 +11,13 @@ using TestItemRunner
     using Unitful
 
     uvtbl = [(spec=SVector(0., 0), visibility=1-2im), (spec=SVector(1e3, 1e2), visibility=1+2im)]
-    comps = Any[
+    models = Any[
         beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15)).comp,
         CircularGaussian(flux=1.0u"W", σ=1.0u"°", coords=SVector(0., 0)u"°"),
+        MultiComponentModel((
+            CircularGaussian(flux=7, σ=1.5u"°", coords=SVector(0.1, 0.5)u"°"),
+            EllipticGaussian(flux=7, σ_major=1u"°", ratio_minor_major=0.3, pa_major=0.5, coords=SVector(1, 3.5)u"°"),
+        )),
     ]
 
     axplot(scatter)(RadPlot(uvtbl))
@@ -33,20 +37,22 @@ using TestItemRunner
     scatter!(UVPlot(uvtbl))  # XXX: wrong results
     scatter!(UVPlot(uvtbl, uvscale=log10))
 
-    @testset for comp in comps
-        axplot(scatter)(RadPlot(uvtbl; model=comp))
+    @testset for model in models
+        axplot(scatter)(RadPlot(uvtbl; model))
         @test current_axis().xlabel[] == "UV distance (λ)"
-        axplot(scatter)(RadPlot(uvtbl; model=comp, yfunc=rad2deg∘angle))
-        axplot(scatter)(ProjPlot(uvtbl, 0; model=comp))
+        axplot(scatter)(RadPlot(uvtbl; model, yfunc=rad2deg∘angle))
+        axplot(scatter)(ProjPlot(uvtbl, 0; model))
         @test current_axis().xlabel[] == "UV projection (λ)"
-        axplot(scatter)(ProjPlot(uvtbl, 0; model=comp, yfunc=rad2deg∘angle))
+        axplot(scatter)(ProjPlot(uvtbl, 0; model, yfunc=rad2deg∘angle))
 
-        axplot(band)(RadPlot(0..10; model=comp))
+        axplot(band)(RadPlot(0..10; model))
         @test current_axis().xlabel[] == "UV distance (λ)"
-        axplot(band)(RadPlot(0..10; model=comp, yfunc=rad2deg∘angle))
-        axplot(scatter)(ProjPlot(0..10, 0; model=comp))
+        axplot(band)(RadPlot(0..10; model, yfunc=rad2deg∘angle))
+        axplot(scatter)(ProjPlot(0..10, 0; model))
         @test current_axis().xlabel[] == "UV projection (λ)"
-        axplot(scatter)(ProjPlot(0..10, 0; model=comp, yfunc=rad2deg∘angle))
+        axplot(scatter)(ProjPlot(0..10, 0; model, yfunc=rad2deg∘angle))
+
+        image(UVPlot(0±10; model))
     end
 end
 
