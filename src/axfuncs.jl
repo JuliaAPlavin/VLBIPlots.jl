@@ -1,19 +1,19 @@
 U(;uvscale=identity, kwargs...) = AxFunc(
-    x -> first(_uvfunc(uvscale)(VLBI.UV(x)));
+    x -> first(_uvfunc(uvscale)(UV(x)));
     label="U (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 V(;uvscale=identity, kwargs...) = AxFunc(
-    x -> last(_uvfunc(uvscale)(VLBI.UV(x)));
+    x -> last(_uvfunc(uvscale)(UV(x)));
     label="V (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
 UVdist(;uvscale=identity, kwargs...) = AxFunc(
-    norm ∘ VLBI.UV;
+    norm ∘ UV;
     label="UV distance (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
 UVproj(posangle; uvscale=identity, kwargs...) = AxFunc(
-    (@o dot(VLBI.UV(_), sincos(posangle)));
+    (@o dot(UV(_), sincos(posangle)));
     label="UV projection (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
@@ -26,7 +26,7 @@ end
 visf(f; label=_visfunclabel(f), limit=_visfunclims(f), model=nothing, kwargs...) = AxFunc(
     isnothing(model) ?
         f ∘ _visibility :
-        (@o visibility(f, model, VLBI.UV(_)) |> ustrip);
+        (@o visibility(f, model, UV(_)) |> ustrip);
     label, limit, kwargs...)
 
 vis_amp(; model=nothing, kwargs...) = visf(abs; model, kwargs...)
