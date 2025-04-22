@@ -59,6 +59,28 @@ using TestItemRunner
     end
 end
 
+@testitem "uvplot for specs" begin
+    using Makie
+    using VLBIData
+
+    @testset for spec in [
+        # VisSpec(VLBI.Baseline(1, (1, 2)), UV(10., 0)),
+        ClosurePhaseSpec((
+            VisSpec(VLBI.Baseline(1, (1, 2)), UV(10., 0)),
+            VisSpec(VLBI.Baseline(1, (2, 3)), UV(0., 10)),
+            VisSpec(VLBI.Baseline(1, (3, 1)), UV(10., 10)),
+        )),
+        ClosureAmpSpec((
+            VisSpec(VLBI.Baseline(1, (1, 2)), UV(10., 0)),
+            VisSpec(VLBI.Baseline(1, (2, 3)), UV(0., 10)),
+            VisSpec(VLBI.Baseline(1, (3, 4)), UV(10., 10)),
+            VisSpec(VLBI.Baseline(1, (4, 1)), UV(10., 20)),
+        )),
+    ]
+        lines(UVPlot(spec))
+    end
+end
+
 @testitem "axfuncs" begin
     using StaticArrays
     using MakieExtra
