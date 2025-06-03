@@ -48,6 +48,10 @@ using TestItemRunner
         @test current_axis().xlabel[] == "UV projection (λ)"
         axplot(scatter)(ProjPlot(uvtbl, 0; model, yfunc=rad2deg∘angle))
 
+        axplot(band)(RadPlot(range(0..10; length=100); model))
+        @test current_axis().xlabel[] == "UV distance (λ)"
+        axplot(band)(RadPlot(collect(range(0..10; length=100)); model))
+        @test current_axis().xlabel[] == "UV distance (λ)"
         axplot(band)(RadPlot(0..10; model))
         @test current_axis().xlabel[] == "UV distance (λ)"
         axplot(band)(RadPlot(0..10; model, yfunc=rad2deg∘angle))

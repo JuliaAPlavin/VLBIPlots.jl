@@ -8,7 +8,7 @@ end
 
 RadPlot(tbl::AbstractVector; kwargs...) = RadPlot(FPlot(tbl); kwargs...)
 
-RadPlot(uvs::AbstractInterval; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
+RadPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
 	FPlot((),
 		Ref(uvs),
 		Ref(@o visibility_envelope(yfunc, model, _) |> _ustrip_i);
@@ -36,7 +36,7 @@ end
 
 ProjPlot(tbl::AbstractVector, posangle; kwargs...) = ProjPlot(FPlot(tbl), posangle; kwargs...)
 
-ProjPlot(uvs::AbstractInterval, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
+ProjPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
 	FPlot((),
 		Ref(uvs),
 		Ref(@o visibility(yfunc, model, _ * SVector(sincos(posangle))) |> ustrip);
