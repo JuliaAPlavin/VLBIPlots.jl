@@ -26,6 +26,7 @@ using Accessors, InverseFunctions, LinearAlgebra, VLBIData, InterferometricModel
 import ..@p
 include("axfuncs.jl")
 end
+const F = AxFuncs
 include("radprojplot.jl")
 include("uvplot.jl")
 include("beamplot.jl")
