@@ -25,7 +25,7 @@ UVPlot(spec::VLBIData.AbstractSpec; kwargs...) = @p let
 	collect
 	cumsum
 	__ .- Ref(mean(__))
-	FPlot(__, (@o _.u), (@o _.v))
+	FPlot(__, AxFuncs.U(), AxFuncs.V())
 	@set __.axis = (;
 		aspect=DataAspect(), autolimitaspect=1,
 		xreversed=true,
