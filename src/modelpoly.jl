@@ -31,6 +31,9 @@ Makie.convert_arguments(ct::PointBased, m::MultiComponentModel) =
         convert_arguments(ct, c) |> only
     end,)
 
+Makie.convert_arguments(ct::Union{Type{<:Poly}, PointBased}, m::Union{AbstractVector{<:ModelComponent}, NTuple{<:Any, ModelComponent}}) =
+    convert_arguments(ct, MultiComponentModel(m))
+
 
 _flux_unit(m::ModelComponent) = unit(flux(m))
 _flux_unit(m::MultiComponentModel) = map(_flux_unit, components(m)) |> uniqueonly
