@@ -28,26 +28,23 @@ _uvfunc(uvscale) = function(uv)
 end
     
 
-visf(f; label=_visfunclabel(f), limit=_visfunclims(f), model=nothing, kwargs...) = AxFunc(
+visf(f; model=nothing, limit=_visfunclims(f), kwargs...) = AxFunc(
     isnothing(model) ?
         f ∘ visibility :
         (@o visibility(f, model, UV(_)) |> ustrip);
-    label, limit, kwargs...)
+    limit, kwargs...)
 
-vis_amp(; model=nothing, kwargs...) = visf(abs; model, kwargs...)
-vis_phase(postf=rad2deg; model=nothing, kwargs...) = visf(postf ∘ angle; model, kwargs...)
+visf(::typeof(abs); kwargs...) = @invoke visf(abs::Function; label="Amplitude", kwargs...)
+visf(::typeof(angle); kwargs...) = @invoke visf(angle::Function; label="Phase", ticks=Makie.AngularTicks(rad2deg(1), "°"), kwargs...)
+visf(::typeof(rad2deg ∘ angle); kwargs...) = @invoke visf((rad2deg ∘ angle)::Function; label="Phase (°)", kwargs...)
 
-_visfunclabel(::typeof(abs)) = "Amplitude"
-_visfunclabel(::typeof(angle)) = "Phase (rad)"
-_visfunclabel(::typeof(rad2deg∘angle)) = "Phase (°)"
-_visfunclabel(f::AxFunc) = f.attrs.label
+vis_amp(; kwargs...) = visf(abs; kwargs...)
+vis_phase(; kwargs...) = visf(angle; kwargs...)
 
 _visfunclims(_) = nothing
 _visfunclims(::typeof(abs)) = (0, nothing)
-# _visfunclims(::typeof(angle)) = (-π, π)
-# _visfunclims(::typeof(rad2deg∘angle)) = (-180, 180)
 
 
 DateTime(; kwargs...) = AxFunc(label="Datetime", (@o _.datetime), kwargs...)
 Time(; kwargs...) = AxFunc(label="Time of day", (@o _.datetime |> Dates.Time), kwargs...)
-baseline(; kwargs...) = AxFunc(label="Baseline", (x -> @p VLBI.antennas(x) map(_.name) join(__, " – ")), kwargs...)
+baseline(; kwargs...) = AxFunc(label="Baseline", x -> join(VLBI.antenna_names(x), " – "), kwargs...)
