@@ -12,7 +12,7 @@ using TestItemRunner
     import VLBISkyModels as VSM
 
 
-    uvtbl = [(spec=SVector(0., 0), value=1-2im), (spec=SVector(1e3, 1e2), value=1+2im)]
+    uvtbl = [(spec=UV(0., 0), value=1-2im), (spec=UV(1e3, 1e2), value=1+2im)]
     models = Any[
         beam(EllipticGaussian, σ_major=0.5, ratio_minor_major=0.5, pa_major=deg2rad(15)).comp,
         CircularGaussian(flux=1.0u"W", σ=1.0u"°", coords=SVector(0., 0)u"°"),

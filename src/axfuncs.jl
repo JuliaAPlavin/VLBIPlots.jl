@@ -30,12 +30,12 @@ _uvfunc(uvscale) = function(uv)
     uv′ = @modify(uvscale, norm(uv))
     return inverse(uvscale).(uv′)
 end
-    
 
+    
 visf(f; model=nothing, limit=_visfunclims(f), kwargs...) = AxFunc(
     isnothing(model) ?
         f ∘ visibility :
-        (@o visibility(f, model, UV(_)) |> ustrip);
+        (@o f(visibility(model, VLBI.AbstractSpec(_))) |> ustrip);
     limit, kwargs...)
 
 visf(::typeof(abs); kwargs...) = @invoke visf(abs::Function; label="Amplitude", kwargs...)
