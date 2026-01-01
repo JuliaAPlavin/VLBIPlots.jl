@@ -20,7 +20,7 @@ Makie.convert_arguments(
     x::AbstractVector,
     y::AbstractVector,
     model::Union{ModelComponent, MultiComponentModel}
-) = Makie.convert_arguments(ct, grid(SVector, x, y), model)
+) = Makie.convert_arguments(ct, grid(SVector, ra=x, dec=y), model)
 
 Makie.convert_arguments(
 	ct::ImageLike,
