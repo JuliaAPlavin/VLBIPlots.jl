@@ -1,7 +1,7 @@
 RadPlot(fplt::FPlot; yfunc=abs, uvscale=identity, model=nothing, axis=(;), kwargs...) = @p let
 	fplt
-	@insert __[1] = AxFuncs.UVdist(;uvscale, limit=(@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__)))
-	@insert __[2] = AxFuncs.visf(yfunc; model)
+	set(__, (@maybe _[1]), AxFuncs.UVdist(;uvscale, limit=(@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__))))
+	set(__, (@maybe _[2]), AxFuncs.visf(yfunc; model))
 	@set __.axis = merge(fplt.axis, axis)
 	setproperties(__, delete(NamedTuple(kwargs), (@maybe _.axis)))
 end
@@ -28,8 +28,8 @@ RadPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}; yfunc=abs, uvscal
 
 ProjPlot(fplt::FPlot, posangle; yfunc=abs, uvscale=identity, model=nothing, axis=(;), kwargs...) = @p let
 	fplt
-	@insert __[1] = AxFuncs.UVproj(posangle; uvscale, limit=(@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__)))
-	@insert __[2] = AxFuncs.visf(yfunc; model)
+	set(__, (@maybe _[1]), AxFuncs.UVproj(posangle; uvscale, limit=(@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__))))
+	set(__, (@maybe _[2]), AxFuncs.visf(yfunc; model))
 	@set __.axis = merge(fplt.axis, axis)
 	setproperties(__, delete(NamedTuple(kwargs), (@maybe _.axis)))
 end

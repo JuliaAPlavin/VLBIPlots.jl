@@ -1,7 +1,7 @@
 UVPlot(fplt::FPlot; uvscale=identity, kwargs...) = @p let
 	fplt
-	@insert __[1] = AxFuncs.U(;uvscale)
-	@insert __[2] = AxFuncs.V(;uvscale)
+	set(__, (@maybe _[1]), AxFuncs.U(;uvscale))
+	set(__, (@maybe _[2]), AxFuncs.V(;uvscale))
 	@set __.axis = (;
 		aspect=DataAspect(), autolimitaspect=1,
 		xreversed=true,
