@@ -1,0 +1,9 @@
+[deps]
+GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
+InterferometricModels = "b395d269-c2ec-4df6-b679-36919ad600ca"
+MakieExtra = "54e234d5-9986-40d8-815f-a5e42de435f6"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+UnitfulAngles = "6fb2a4bd-7999-5318-a3b2-8ad61056cd98"
+VLBIFiles = "c1ebf4c8-f9d4-409a-8daf-7009448f4e6e"
+VLBIPlots = "0260e397-8112-41bf-b55a-6b4577718f00"
