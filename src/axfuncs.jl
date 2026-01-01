@@ -48,6 +48,6 @@ _visfunclims(::typeof(abs)) = (0, nothing)
 # _visfunclims(::typeof(rad2deg∘angle)) = (-180, 180)
 
 
-DateTime() = AxFunc(label="Datetime", @o _.datetime)
-Time() = AxFunc(label="Time of day", @o _.datetime |> Dates.Time)
-baseline() = AxFunc(label="Baseline", x -> @p VLBI.antennas(x) map(_.name) join(__, " – "))
+DateTime(; kwargs...) = AxFunc(label="Datetime", (@o _.datetime), kwargs...)
+Time(; kwargs...) = AxFunc(label="Time of day", (@o _.datetime |> Dates.Time), kwargs...)
+baseline(; kwargs...) = AxFunc(label="Baseline", (x -> @p VLBI.antennas(x) map(_.name) join(__, " – ")), kwargs...)
