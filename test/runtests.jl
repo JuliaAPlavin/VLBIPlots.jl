@@ -9,6 +9,8 @@ using TestItemRunner
     using IntervalSets
     using MakieExtra
     using Unitful
+    import VLBISkyModels as VSM
+
 
     uvtbl = [(spec=SVector(0., 0), visibility=1-2im), (spec=SVector(1e3, 1e2), visibility=1+2im)]
     models = Any[
@@ -18,6 +20,7 @@ using TestItemRunner
             CircularGaussian(flux=7, σ=1.5u"°", coords=SVector(0.1, 0.5)u"°"),
             EllipticGaussian(flux=7, σ_major=1u"°", ratio_minor_major=0.3, pa_major=0.5, coords=SVector(1, 3.5)u"°"),
         )),
+        VSM.modify(VSM.MRing(0.1, -0.2), VSM.Stretch(VSM.μas2rad(30)))
     ]
 
     axplot(scatter)(RadPlot(uvtbl))
