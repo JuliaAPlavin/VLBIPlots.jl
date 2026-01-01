@@ -40,6 +40,13 @@ using TestItemRunner
     scatter!(UVPlot(uvtbl))  # XXX: wrong results
     scatter!(UVPlot(uvtbl, uvscale=log10))
 
+    # uvscale can be Observable:
+    uvscale = Observable{Any}(identity)
+    axplot(scatter)(@lift UVPlot(uvtbl; uvscale=$uvscale))
+    @test current_axis().xscale[] === identity
+    uvscale[] = SymLog(2)
+    @test current_axis().xscale[] === SymLog(2)
+
     @testset for model in models
         axplot(scatter)(RadPlot(uvtbl; model))
         @test current_axis().xlabel[] == "UV distance (λ)"
