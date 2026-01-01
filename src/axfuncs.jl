@@ -25,7 +25,7 @@ end
 
 visf(f; label=_visfunclabel(f), limit=_visfunclims(f), model=nothing, kwargs...) = AxFunc(
     isnothing(model) ?
-        f ∘ _visibility :
+        f ∘ visibility :
         (@o visibility(f, model, UV(_)) |> ustrip);
     label, limit, kwargs...)
 
