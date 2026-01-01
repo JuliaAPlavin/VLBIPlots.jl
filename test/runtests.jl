@@ -147,6 +147,8 @@ end
         @test_throws Exception image!(model, npix="abc")  # to ensure that kwargs aren't just ignored
         poly(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
         scatter(model)
+        scatter(components(model))
+        poly!(components(model))
         beampoly!(ax, beam(CircularGaussian, σ=0.3), color=(:red, 0.2))
         beampoly!(Observable(beam(CircularGaussian, σ=0.3)), position=(0.1, 0.1), color=(:red, 0.2))
     end
