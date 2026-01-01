@@ -94,10 +94,10 @@ end
 
     uvtbl = [(spec=VLBI.VisSpec(VLBI.Baseline(1, (1, 2)), UV(0., 0)), freq_spec=1.5u"GHz", value=1-2im, datetime=now()),
              (spec=VLBI.VisSpec(VLBI.Baseline(1, (1, 2)), UV(1e3, 1e2)), freq_spec=1.5u"GHz", value=1+2im, datetime=now())]
-    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.UVdist(), VLBIPlots.AxFuncs.vis_amp()))
-    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.UVdist_u(u"km"), VLBIPlots.AxFuncs.vis_amp()))
-    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.vis_phase(), VLBIPlots.AxFuncs.baseline()))
-    axplot(scatter)(FPlot(uvtbl, VLBIPlots.AxFuncs.Time(), VLBIPlots.AxFuncs.baseline()))
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.UVdist(), VLBIPlots.F.vis_amp()))
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.UVdist_u(u"km"), VLBIPlots.F.vis_amp()))
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.vis_phase(), VLBIPlots.F.baseline()))
+    axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.Time(), VLBIPlots.F.baseline()))
 end
 
 @testitem "model poly, image, beam" begin
