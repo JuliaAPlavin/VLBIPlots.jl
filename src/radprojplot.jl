@@ -8,13 +8,14 @@ end
 
 RadPlot(tbl::AbstractVector; kwargs...) = RadPlot(FPlot(tbl); kwargs...)
 
-RadPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
+function RadPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}; yfunc=abs, uvscale=identity, model=nothing, kwargs...)
+	visf_noenvelope = AxFuncs.visf(yfunc; model)
 	FPlot((),
 		Ref(uvs),
 		Ref(@o visibility_envelope(yfunc, model, _) |> _ustrip_i);
 		axis=(;
 			xlabel="UV distance (λ)",
-			ylabel=AxFuncs._visfunclabel(yfunc),
+			ylabel=MakieExtra.shortlabel(visf_noenvelope),
 			limits=(
 				extrema(uvs),
 				AxFuncs._visfunclims(yfunc),
@@ -24,6 +25,7 @@ RadPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}; yfunc=abs, uvscal
 		),
 		delete(NamedTuple(kwargs), (@maybe _.axis))...,
 	)
+end
 
 
 ProjPlot(fplt::FPlot, posangle; yfunc=abs, uvscale=identity, model=nothing, axis=(;), kwargs...) = @p let
@@ -36,13 +38,14 @@ end
 
 ProjPlot(tbl::AbstractVector, posangle; kwargs...) = ProjPlot(FPlot(tbl), posangle; kwargs...)
 
-ProjPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...) =
+function ProjPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...)
+	visf_noenvelope = AxFuncs.visf(yfunc; model)
 	FPlot((),
 		Ref(uvs),
 		Ref(@o visibility(yfunc, model, _ * SVector(sincos(posangle))) |> ustrip);
 		axis=(;
 			xlabel="UV projection (λ)",
-			ylabel=AxFuncs._visfunclabel(yfunc),
+			ylabel=MakieExtra.shortlabel(visf_noenvelope),
 			limits=(
 				extrema(uvs),
 				AxFuncs._visfunclims(yfunc),
@@ -52,3 +55,4 @@ ProjPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}, posangle; yfunc=
 		),
 		delete(NamedTuple(kwargs), (@maybe _.axis))...,
 	)
+end

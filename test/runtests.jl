@@ -25,12 +25,16 @@ using TestItemRunner
 
     axplot(scatter)(RadPlot(uvtbl))
     @test current_axis().xlabel[] == "UV distance (λ)"
+    @test current_axis().ylabel[] == "Amplitude"
     axplot(scatter)(RadPlot(uvtbl; yfunc=rad2deg∘angle))
     @test current_axis().xlabel[] == "UV distance (λ)"
+    @test current_axis().ylabel[] == "Phase (°)"
     axplot(scatter)(ProjPlot(uvtbl, 0))
     @test current_axis().xlabel[] == "UV projection (λ)"
-    axplot(scatter)(ProjPlot(uvtbl, 0; yfunc=rad2deg∘angle))
+    @test current_axis().ylabel[] == "Amplitude"
+    axplot(scatter)(ProjPlot(uvtbl, 0; yfunc=angle))
     @test current_axis().xlabel[] == "UV projection (λ)"
+    @test current_axis().ylabel[] == "Phase"
 
     axplot(scatter)(UVPlot(uvtbl))
     @test current_axis().xlabel[] == "U (λ)"
