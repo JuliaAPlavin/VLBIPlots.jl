@@ -22,6 +22,10 @@ UVproj(posangle; uvscale=identity, kwargs...) = AxFunc(
     label="UV projection (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
+UVarea_sqrt(; kwargs...) = AxFunc(
+	sqrt ∘ UVarea,
+    label="√area (λ)", tickformat=EngTicks(:symbol), kwargs...)
+
 _uvfunc(uvscale) = function(uv)
     uv′ = @modify(uvscale, norm(uv))
     return inverse(uvscale).(uv′)

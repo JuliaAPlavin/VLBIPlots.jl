@@ -109,6 +109,16 @@ end
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.UVdist_u(u"km"), VLBIPlots.F.vis_amp()))
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.vis_phase(), VLBIPlots.F.baseline()))
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.Time(), VLBIPlots.F.baseline()))
+
+    tbl = [(
+        spec=VLBI.ClosurePhaseSpec((
+            VLBI.VisSpec(VLBI.Baseline((1, 2)), UV(0., 0)),
+            VLBI.VisSpec(VLBI.Baseline((2, 3)), UV(0., 0)),
+            VLBI.VisSpec(VLBI.Baseline((3, 1)), UV(0., 0)),
+        )),
+        value=1-2im,
+    )]
+    axplot(scatter)(FPlot(tbl, VLBIPlots.F.UVarea_sqrt(), VLBIPlots.F.vis_amp()))
 end
 
 @testitem "model poly, image, beam" begin
