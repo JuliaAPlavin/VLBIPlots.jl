@@ -4,6 +4,7 @@ UVPlot(fplt::FPlot; uvscale=identity, kwargs...) = @p let
 	@insert __[2] = AxFuncs.V(;uvscale)
 	@set __.axis = (;
 		aspect=DataAspect(), autolimitaspect=1,
+		xreversed=true,
 		fplt.axis...,
 		get(kwargs, :axis, (;))...,
 	)
