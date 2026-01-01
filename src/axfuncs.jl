@@ -12,6 +12,11 @@ UVdist(;uvscale=identity, kwargs...) = AxFunc(
     label="UV distance (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
+UVdist_u(u; uvscale=identity, kwargs...) = AxFunc(
+    r -> norm(VLBI.UV(r)) * (u"c"/VLBI.frequency(r)) |> u |> ustrip;
+    label="Baseline ($u)", scale=uvscale, tickformat=EngTicks(:symbol),
+    kwargs...)
+
 UVproj(posangle; uvscale=identity, kwargs...) = AxFunc(
     (@o dot(UV(_), sincos(posangle)));
     label="UV projection (λ)", scale=uvscale, tickformat=EngTicks(:symbol),
@@ -35,6 +40,7 @@ vis_phase(postf=rad2deg; model=nothing, kwargs...) = visf(postf ∘ angle; model
 _visfunclabel(::typeof(abs)) = "Amplitude"
 _visfunclabel(::typeof(angle)) = "Phase (rad)"
 _visfunclabel(::typeof(rad2deg∘angle)) = "Phase (°)"
+_visfunclabel(f::AxFunc) = f.attrs.label
 
 _visfunclims(_) = nothing
 _visfunclims(::typeof(abs)) = (0, nothing)

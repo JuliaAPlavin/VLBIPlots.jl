@@ -22,7 +22,7 @@ export RadPlot, ProjPlot, UVPlot, beampoly!
 _ustrip_i(x::Interval) = @modify(ustrip, endpoints(x)[∗])
 
 module AxFuncs
-using ..Accessors, ..InverseFunctions, ..LinearAlgebra, ..VLBIData, ..InterferometricModels, ..MakieExtra, Dates
+using Accessors, InverseFunctions, LinearAlgebra, VLBIData, InterferometricModels, MakieExtra, Dates, Unitful
 import ..@p
 include("axfuncs.jl")
 end
