@@ -1,6 +1,6 @@
 @recipe BeamPoly (beam,) begin
     position=Point2(0.1, 0.1)
-    Makie.MakieCore.documented_attributes(Makie.Poly)...
+    Makie.documented_attributes(Makie.Poly)...
 end
 
 Makie.convert_arguments(ct::Type{<:BeamPoly}, beam::Beam) = convert_arguments(ct, ModelComponent(beam))

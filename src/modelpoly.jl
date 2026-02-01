@@ -1,6 +1,3 @@
-MakieExtra.@define_plotfunc (poly,) Union{ModelComponent,MultiComponentModel}
-MakieExtra.@define_plotfunc (scatter,) Union{ModelComponent,MultiComponentModel}
-
 Makie.convert_arguments(ct::Type{<:Poly}, m::InterferometricModels.Point) =
     convert_arguments(ct, Circle(Point2(ustrip.(coords(m))...), 0))
 
@@ -40,7 +37,10 @@ _flux_unit(m::MultiComponentModel) = map(_flux_unit, components(m)) |> uniqueonl
 _coord_unit(m::ModelComponent) = [unit(coords(m)[1]), unit(sqrt(effective_area(m)))] |> uniqueonly
 _coord_unit(m::MultiComponentModel) = map(_coord_unit, components(m)) |> uniqueonly
 
-function MakieExtra.default_axis_attributes(::Union{Type{<:Poly},Type{<:Scatter}}, m::Union{ModelComponent,MultiComponentModel}; kwargs...)
+MakieExtra.axis_attributes(ct, m::Union{AbstractVector{<:ModelComponent},NTuple{<:Any,ModelComponent}}, kwargs) =
+    MakieExtra.axis_attributes(ct, MultiComponentModel(m), kwargs)
+
+function MakieExtra.axis_attributes(ct, m::Union{ModelComponent,MultiComponentModel}, kwargs)
     u = _coord_unit(m)
     (
         aspect=DataAspect(),

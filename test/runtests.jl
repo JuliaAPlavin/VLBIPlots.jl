@@ -155,9 +155,12 @@ end
         image!(-1..1, -1..1, model)
         image!(-1:0.1:1, -1:0.1:1, model)
         @test_throws Exception image!(model, npix="abc")  # to ensure that kwargs aren't just ignored
-        poly(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
-        scatter(model)
-        scatter(components(model))
+        axplot(poly)(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
+        @test current_axis().xlabel[] == "(°)"
+        @test current_axis().xreversed[] == true
+        axplot(scatter)(model)
+        @test current_axis().xlabel[] == "(°)"
+        axplot(scatter)(components(model))
         poly!(components(model))
         beampoly!(ax, beam(CircularGaussian, σ=0.3), color=(:red, 0.2))
         beampoly!(Observable(beam(CircularGaussian, σ=0.3)), position=(0.1, 0.1), color=(:red, 0.2))
@@ -171,8 +174,9 @@ end
         ]),
     ]
     @testset for model in models
-        poly(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
-        scatter(model)
+        axplot(poly)(model, strokewidth=2, color=(:black, 0), strokecolor=:white)
+        @test current_axis().xlabel[] == "(°)"
+        axplot(scatter)(model)
     end
 end
 
