@@ -1,12 +1,13 @@
 RadPlot(fplt::FPlot; yfunc=abs, uvscale=identity, model=nothing, axis=(;), kwargs...) = @p let
 	fplt
-	set(__, (@maybe _[1]), AxFuncs.UVdist(;uvscale, limit=(@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__))))
+	set(__, (@maybe _[1]), AxFuncs.UVdist(;uvscale,
+		limit=isnothing(fplt.data) ? nothing : (@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__))))
 	set(__, (@maybe _[2]), AxFuncs.visf(yfunc; model))
 	@set __.axis = merge(fplt.axis, axis)
 	setproperties(__, delete(NamedTuple(kwargs), (@maybe _.axis)))
 end
 
-RadPlot(tbl::AbstractVector; kwargs...) = RadPlot(FPlot(tbl); kwargs...)
+RadPlot(tbl::Union{AbstractVector,Nothing}; kwargs...) = RadPlot(FPlot(tbl); kwargs...)
 
 function RadPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}; yfunc=abs, uvscale=identity, model=nothing, kwargs...)
 	visf_noenvelope = AxFuncs.visf(yfunc; model)
@@ -30,13 +31,14 @@ end
 
 ProjPlot(fplt::FPlot, posangle; yfunc=abs, uvscale=identity, model=nothing, axis=(;), kwargs...) = @p let
 	fplt
-	set(__, (@maybe _[1]), AxFuncs.UVproj(posangle; uvscale, limit=(@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__))))
+	set(__, (@maybe _[1]), AxFuncs.UVproj(posangle; uvscale,
+		limit=isnothing(fplt.data) ? nothing : (@p fplt.data maximum(norm(UV(_))) (-0.02*__, 1.05*__))))
 	set(__, (@maybe _[2]), AxFuncs.visf(yfunc; model))
 	@set __.axis = merge(fplt.axis, axis)
 	setproperties(__, delete(NamedTuple(kwargs), (@maybe _.axis)))
 end
 
-ProjPlot(tbl::AbstractVector, posangle; kwargs...) = ProjPlot(FPlot(tbl), posangle; kwargs...)
+ProjPlot(tbl::Union{AbstractVector,Nothing}, posangle; kwargs...) = ProjPlot(FPlot(tbl), posangle; kwargs...)
 
 function ProjPlot(uvs::Union{AbstractInterval,AbstractVector{<:Number}}, posangle; yfunc=abs, uvscale=identity, model=nothing, kwargs...)
 	visf_noenvelope = AxFuncs.visf(yfunc; model)
