@@ -4,6 +4,7 @@ using Pkg
 Pkg.activate(@__DIR__)
 
 using VLBIPlots
+using VLBIData
 using VLBIFiles
 import GLMakie
 using MakieExtra
@@ -15,7 +16,7 @@ test_data_path = joinpath(dirname(pathof(VLBIFiles)), "../test/data/SR1_3C279_20
 uvdata = VLBIFiles.load(test_data_path)
 
 # Extract UV table for plotting
-uvtbl = uvtable(uvdata) |> VLBI.add_conjvis
+uvtbl = uvtable(uvdata) |> VLBIData.add_conjvis
 
 # Create a comprehensive figure with all three plot types
 fig = Figure(size=(900, 400))

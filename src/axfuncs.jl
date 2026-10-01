@@ -13,7 +13,7 @@ UVdist(;uvscale=identity, kwargs...) = AxFunc(
     kwargs...)
 
 UVdist_u(u; uvscale=identity, kwargs...) = AxFunc(
-    r -> norm(VLBI.UV(r)) * (u"c"/VLBI.frequency(r)) |> u |> ustrip;
+    r -> norm(UV(r)) * (u"c"/frequency(r)) |> u |> ustrip;
     label="Baseline ($u)", scale=uvscale, tickformat=EngTicks(:symbol),
     kwargs...)
 
@@ -35,7 +35,7 @@ end
 visf(f; model=nothing, limit=_visfunclims(f), kwargs...) = AxFunc(
     isnothing(model) ?
         f ∘ visibility :
-        (@o f(visibility(model, VLBI.AbstractSpec(_))) |> ustrip);
+        (@o f(visibility(model, VLBIData.AbstractSpec(_))) |> ustrip);
     limit, kwargs...)
 
 visf(::typeof(abs); kwargs...) = @invoke visf(abs::Function; label="Amplitude", kwargs...)
@@ -51,4 +51,4 @@ _visfunclims(::typeof(abs)) = (0, nothing)
 
 DateTime(; kwargs...) = AxFunc(label="Datetime", (@o _.datetime), kwargs...)
 Time(; kwargs...) = AxFunc(label="Time of day", (@o _.datetime |> Dates.Time), kwargs...)
-baseline(; kwargs...) = AxFunc(label="Baseline", x -> join(VLBI.antenna_names(x), " – "), kwargs...)
+baseline(; kwargs...) = AxFunc(label="Baseline", x -> join(antenna_names(x), " – "), kwargs...)

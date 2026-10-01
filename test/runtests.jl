@@ -79,17 +79,17 @@ end
     using VLBIData
 
     @testset for spec in [
-        # VisSpec(VLBI.Baseline(1, (1, 2)), UV(10., 0)),
+        # VisSpec(Baseline(1, (1, 2)), UV(10., 0)),
         ClosurePhaseSpec((
-            VisSpec(VLBI.Baseline((1, 2)), UV(10., 0)),
-            VisSpec(VLBI.Baseline((2, 3)), UV(0., 10)),
-            VisSpec(VLBI.Baseline((3, 1)), UV(10., 10)),
+            VisSpec(Baseline((1, 2)), UV(10., 0)),
+            VisSpec(Baseline((2, 3)), UV(0., 10)),
+            VisSpec(Baseline((3, 1)), UV(10., 10)),
         )),
         ClosureAmpSpec((
-            VisSpec(VLBI.Baseline((1, 2)), UV(10., 0)),
-            VisSpec(VLBI.Baseline((2, 3)), UV(0., 10)),
-            VisSpec(VLBI.Baseline((3, 4)), UV(10., 10)),
-            VisSpec(VLBI.Baseline((4, 1)), UV(10., 20)),
+            VisSpec(Baseline((1, 2)), UV(10., 0)),
+            VisSpec(Baseline((2, 3)), UV(0., 10)),
+            VisSpec(Baseline((3, 4)), UV(10., 10)),
+            VisSpec(Baseline((4, 1)), UV(10., 20)),
         )),
     ]
         lines(UVPlot(spec))
@@ -103,18 +103,18 @@ end
     using Dates
     using Unitful
 
-    uvtbl = [(spec=VLBI.VisSpec(VLBI.Baseline((1, 2)), UV(0., 0)), freq_spec=1.5u"GHz", value=1-2im, datetime=now()),
-             (spec=VLBI.VisSpec(VLBI.Baseline((1, 2)), UV(1e3, 1e2)), freq_spec=1.5u"GHz", value=1+2im, datetime=now())]
+    uvtbl = [(spec=VisSpec(Baseline((1, 2)), UV(0., 0)), freq_spec=1.5u"GHz", value=1-2im, datetime=now()),
+             (spec=VisSpec(Baseline((1, 2)), UV(1e3, 1e2)), freq_spec=1.5u"GHz", value=1+2im, datetime=now())]
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.UVdist(), VLBIPlots.F.vis_amp()))
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.UVdist_u(u"km"), VLBIPlots.F.vis_amp()))
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.vis_phase(), VLBIPlots.F.baseline()))
     axplot(scatter)(FPlot(uvtbl, VLBIPlots.F.Time(), VLBIPlots.F.baseline()))
 
     tbl = [(
-        spec=VLBI.ClosurePhaseSpec((
-            VLBI.VisSpec(VLBI.Baseline((1, 2)), UV(0., 0)),
-            VLBI.VisSpec(VLBI.Baseline((2, 3)), UV(0., 0)),
-            VLBI.VisSpec(VLBI.Baseline((3, 1)), UV(0., 0)),
+        spec=ClosurePhaseSpec((
+            VisSpec(Baseline((1, 2)), UV(0., 0)),
+            VisSpec(Baseline((2, 3)), UV(0., 0)),
+            VisSpec(Baseline((3, 1)), UV(0., 0)),
         )),
         value=1-2im,
     )]

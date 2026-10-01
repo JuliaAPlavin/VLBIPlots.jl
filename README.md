@@ -65,13 +65,14 @@ Here's a quick overview of the three main plot types:
 
 ```julia
 using VLBIPlots
+using VLBIData
 using VLBIFiles
 import GLMakie
 using MakieExtra
 
 # Load real VLBI data
 uvdata = VLBIFiles.load("path/to/your/data.uvfits")
-uvtbl = uvtable(uvdata) |> VLBI.add_conjvis
+uvtbl = uvtable(uvdata) |> VLBIData.add_conjvis
 
 # Common styling keywords
 kws = (markersize=2, color=r -> U.value(abs(r.value)), colormap=:turbo)
